@@ -321,6 +321,7 @@ async function saveData(){
 }
 
 function recordAction(action) {
+  console.log("Recorded:", action); 
   undoStack.push(action);
 
   if (undoStack.length > 100)
@@ -741,6 +742,8 @@ function showToast(msg) {
 
 // ======= Undo / Redo =======
 async function undo() {
+  console.log("Undo clicked");
+    console.log(undoStack);
 
     if (!undoStack.length)
         return;
