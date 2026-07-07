@@ -1,5 +1,49 @@
 console.log("SCRIPT STARTED");
 
+async function login() {
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const { error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+    });
+
+    if (error) {
+        document.getElementById("loginError").innerText = error.message;
+        return;
+    }
+
+    showApp();
+}
+
+async function checkLogin() {
+
+    const { data } = await supabaseClient.auth.getSession();
+
+    if (data.session) {
+
+        showApp();
+
+    } else {
+
+        document.getElementById("loginBox").style.display = "block";
+        document.getElementById("app").style.display = "none";
+
+    }
+}
+
+function showApp() {
+
+    document.getElementById("loginBox").style.display = "none";
+
+    document.getElementById("app").style.display = "block";
+
+    loadOrders();
+
+}
+
 const SUPABASE_URL = "https://adcjrkudofddvmcpmdzw.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkY2pya3Vkb2ZkZHZtY3BtZHp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMzNTk5MjAsImV4cCI6MjA5ODkzNTkyMH0.PBRsj25fzx6nz9fdDQb47pLQvJ5xPzQ74tcHPdcfDLI";
 
@@ -302,7 +346,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   renderHeaders();
 
-  await loadOrders();
+  await checkLogin(); 
 
   undoStack.push(JSON.stringify(data));
   redoStack=[];
