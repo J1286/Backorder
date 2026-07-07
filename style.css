@@ -1,0 +1,175 @@
+/* ===== Base Table ===== */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: Arial, sans-serif
+}
+
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 4px 6px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ===== Sticky Header ===== */
+thead th {
+  position: sticky;
+  top: 0;
+  background: #f5f5f5;
+  z-index: 3;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== Scroll Container ===== */
+#tableContainer {
+  max-height: 70vh;
+  overflow: auto;
+  border: 1px solid #ccc;
+  position: relative;
+}
+
+/* ===== Row Hover ===== */
+tbody tr:hover {
+  background-color: #f1f7ff;
+}
+
+/* ===== Focus ===== */
+td:focus {
+  outline: 2px solid #4caf50;
+  background: #fff !important;
+}
+
+/* ===== First Column (#) ===== */
+#backorderTable th:nth-child(1),
+#backorderTable td:nth-child(1) {
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  background: #f9f9f9;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+
+/* ===== Actions Column (checkbox + buttons) ===== */
+#backorderTable th:nth-child(2),
+#backorderTable td:nth-child(2) {
+  width: 100px;
+  min-width: 100px;
+  max-width: 80px;
+  text-align: center;
+  position: sticky;
+  left: 40px;
+  background: #fff;
+  z-index: 2;
+}
+
+/* ===== Last Column (Updated) ===== */
+#backorderTable th:last-child,
+#backorderTable td:last-child {
+  width: 140px;
+  min-width: 140px;
+}
+
+/* ===== Buttons ===== */
+button {
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 2px 6px;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Neutral hover */
+button:hover {
+  background: #e0e0e0;
+}
+
+/* Copy button */
+button.copy-btn::before {
+  content: "📋";
+}
+button.copy-btn:hover {
+  background: #4caf50;
+  color: white;
+}
+
+/* Delete button */
+button.delete-btn {
+  min-width: 20px;
+}
+button.delete-btn:hover {
+  background: #f44336;
+  color: white;
+}
+
+/* ===== Checkbox spacing ===== */
+td:nth-child(2) input[type="checkbox"] {
+  margin-right: 4px;
+}
+
+/* ===== Empty Cells ===== */
+td:empty {
+  background-color: #fafafa;
+}
+
+/* ===== Duplicate Highlight ===== */
+.duplicate {
+  background-color: #fff3cd;
+}
+
+/* ===== Recently Updated Highlight ===== */
+.recent {
+  animation: fadeHighlight 5s ease forwards;
+}
+
+@keyframes fadeHighlight {
+  from {
+    background-color: #e8f5e9;
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+/* ===== Notes Colors ===== */
+.note-instock {
+  background: #fff3a6; /* yellow */
+}
+
+.note-hold {
+  background: #ffe0b2; /* light orange */
+}
+
+.note-wait {
+  background: #d7c7ff; /* purple */
+}
+
+.note-discontinued {
+  background: #ffcdd2; /* light red */
+}
+
+/* ===== Small UI polish ===== */
+.actions button {
+  margin-right: 6px;
+}
+
+.controls button {
+  margin-right: 6px;
+}
+
+input,
+select {
+  padding: 4px 6px;
+  font-size: 14px;
+  margin-right: 6px;
+}

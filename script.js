@@ -1,0 +1,860 @@
+const SUPABASE_URL = "https://adcjrkudofddvmcpmdzw.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkY2pya3Vkb2ZkZHZtY3BtZHp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMzNTk5MjAsImV4cCI6MjA5ODkzNTkyMH0.PBRsj25fzx6nz9fdDQb47pLQvJ5xPzQ74tcHPdcfDLI";
+
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let data = [];
+
+async function loadOrders(){
+
+  const { data: rows, error } =
+    await supabaseClient
+      .from("orders")
+      .select("*")
+      .order("created_at");
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  data = rows.map(row => ({
+  _id: row.id,
+
+  "DShipper ID": row.dshipper_id || "",
+  "Tr.Orig.No.": row.tr_orig_no || "",
+  "Cust. PO No.": row.cust_po_no || "",
+
+  "Item ID 1": row.item_id_1 || "",
+  "Qty 1": row.qty_1 || "",
+  "Price 1": row.price_1 || "",
+
+  "Item ID 2": row.item_id_2 || "",
+  "Qty 2": row.qty_2 || "",
+  "Price 2": row.price_2 || "",
+
+  "Item ID 3": row.item_id_3 || "",
+  "Qty 3": row.qty_3 || "",
+  "Price 3": row.price_3 || "",
+
+  "Item ID 4": row.item_id_4 || "",
+  "Qty 4": row.qty_4 || "",
+  "Price 4": row.price_4 || "",
+
+  "Item ID 5": row.item_id_5 || "",
+  "Qty 5": row.qty_5 || "",
+  "Price 5": row.price_5 || "",
+
+  "Ship Name": row.ship_name || "",
+  "Ship Addr1": row.ship_addr1 || "",
+  "Ship Addr2": row.ship_addr2 || "",
+  "Ship City": row.ship_city || "",
+  "Ship State": row.ship_state || "",
+  "Ship Zip": row.ship_zip || "",
+  "Ship Country": row.ship_country || "",
+  "Ship Phone": row.ship_phone || "",
+  "Ship Email": row.ship_email || "",
+  "Ship Service": row.ship_service || "",
+  "Ship Ins.": row.ship_ins || "",
+  "Ship COD": row.ship_cod || "",
+  "Ship Confirm.": row.ship_confirm || "",
+  "Ship From": row.ship_from || "",
+  "Ship Acct": row.ship_acct || "",
+
+  _notes: row.notes || "",
+
+  _meta: {
+    updatedAt: row.updated_at
+  }
+}));
+
+  renderTable();
+}
+
+async function insertOrder(row) {
+
+  const dbRow = buildDBRow(row);
+
+  const { data: inserted, error } =
+    await supabaseClient
+      .from("orders")
+      .insert(dbRow)
+      .select()
+      .single();
+
+  if(error){
+    console.error("Insert failed:", error);
+    return null;
+  }
+
+  row._id = inserted.id;
+
+  return inserted;
+}
+
+function buildDBRow(row) {
+  return {
+    dshipper_id: row["DShipper ID"] || "",
+    tr_orig_no: row["Tr.Orig.No."] || "",
+    cust_po_no: row["Cust. PO No."] || "",
+
+    item_id_1: row["Item ID 1"] || "",
+    qty_1: row["Qty 1"] || "",
+    price_1: row["Price 1"] || "",
+
+    item_id_2: row["Item ID 2"] || "",
+    qty_2: row["Qty 2"] || "",
+    price_2: row["Price 2"] || "",
+
+    item_id_3: row["Item ID 3"] || "",
+    qty_3: row["Qty 3"] || "",
+    price_3: row["Price 3"] || "",
+
+    item_id_4: row["Item ID 4"] || "",
+    qty_4: row["Qty 4"] || "",
+    price_4: row["Price 4"] || "",
+
+    item_id_5: row["Item ID 5"] || "",
+    qty_5: row["Qty 5"] || "",
+    price_5: row["Price 5"] || "",
+
+    ship_name: row["Ship Name"] || "",
+    ship_addr1: row["Ship Addr1"] || "",
+    ship_addr2: row["Ship Addr2"] || "",
+    ship_city: row["Ship City"] || "",
+    ship_state: row["Ship State"] || "",
+    ship_zip: row["Ship Zip"] || "",
+    ship_country: row["Ship Country"] || "",
+    ship_phone: row["Ship Phone"] || "",
+    ship_email: row["Ship Email"] || "",
+    ship_service: row["Ship Service"] || "",
+    ship_ins: row["Ship Ins."] || "",
+    ship_cod: row["Ship COD"] || "",
+    ship_confirm: row["Ship Confirm."] || "",
+    ship_from: row["Ship From"] || "",
+    ship_acct: row["Ship Acct"] || "",
+
+    notes: row._notes || "",
+    updated_at: new Date().toISOString()
+  };
+}
+
+async function updateOrder(row){
+
+  const dbRow = {
+    dshipper_id: row["DShipper ID"] || "",
+    tr_orig_no: row["Tr.Orig.No."] || "",
+    cust_po_no: row["Cust. PO No."] || "",
+
+    item_id_1: row["Item ID 1"] || "",
+    qty_1: row["Qty 1"] || "",
+    price_1: row["Price 1"] || "",
+
+    item_id_2: row["Item ID 2"] || "",
+    qty_2: row["Qty 2"] || "",
+    price_2: row["Price 2"] || "",
+
+    item_id_3: row["Item ID 3"] || "",
+    qty_3: row["Qty 3"] || "",
+    price_3: row["Price 3"] || "",
+
+    item_id_4: row["Item ID 4"] || "",
+    qty_4: row["Qty 4"] || "",
+    price_4: row["Price 4"] || "",
+
+    item_id_5: row["Item ID 5"] || "",
+    qty_5: row["Qty 5"] || "",
+    price_5: row["Price 5"] || "",
+
+    ship_name: row["Ship Name"] || "",
+    ship_addr1: row["Ship Addr1"] || "",
+    ship_addr2: row["Ship Addr2"] || "",
+    ship_city: row["Ship City"] || "",
+    ship_state: row["Ship State"] || "",
+    ship_zip: row["Ship Zip"] || "",
+    ship_country: row["Ship Country"] || "",
+    ship_phone: row["Ship Phone"] || "",
+    ship_email: row["Ship Email"] || "",
+    ship_service: row["Ship Service"] || "",
+    ship_ins: row["Ship Ins."] || "",
+    ship_cod: row["Ship COD"] || "",
+    ship_confirm: row["Ship Confirm."] || "",
+    ship_from: row["Ship From"] || "",
+    ship_acct: row["Ship Acct"] || "",
+
+    notes: row._notes || "",
+    updated_at: new Date().toISOString()
+  };
+
+  const { error } =
+    await supabaseClient
+      .from("orders")
+      .update(dbRow)
+      .eq("id", row._id);
+
+  if(error){
+    console.error("Update failed:", error);
+  }
+}
+
+async function deleteOrderFromDB(id){
+
+  const { error } =
+    await supabaseClient
+      .from("orders")
+      .delete()
+      .eq("id", id);
+
+  if(error){
+    console.error("Delete failed:", error);
+  }
+}
+
+let searchQuery = "";
+let undoStack = [];
+let redoStack = [];
+let notesSortAsc = true;
+let sortByUpdated = false;
+let sortAsc = false;
+
+// Columns definition
+const columns = [
+  "DShipper ID",
+  "Tr.Orig.No.",
+  "Cust. PO No.",
+  "Item ID 1",
+  "Qty 1",
+  "Price 1",
+  "Item ID 2",
+  "Qty 2",
+  "Price 2",
+  "Item ID 3",
+  "Qty 3",
+  "Price 3",
+  "Item ID 4",
+  "Qty 4",
+  "Price 4",
+  "Item ID 5",
+  "Qty 5",
+  "Price 5",
+  "Ship Name",
+  "Ship Addr1",
+  "Ship Addr2",
+  "Ship City",
+  "Ship State",
+  "Ship Zip",
+  "Ship Country",
+  "Ship Phone",
+  "Ship Email",
+  "Ship Service",
+  "Ship Ins.",
+  "Ship COD",
+  "Ship Confirm.",
+  "Ship From",
+  "Ship Acct"
+];
+
+const dealerMap = {
+  redline360: "W7232",
+  ecs: "W6938",
+  tdot: "W7290",
+  others: "OTHERS"
+};
+
+const noteOptions = [
+  "IN STOCK",
+  "WAIT TO RECEIVE",
+  "ETA",
+  "HOLD",
+  "NO ETA",
+  "DISCONTINUED"
+];
+
+let dealerSelect;
+let debounceTimeout;
+
+// ======= Initialization =======
+document.addEventListener("DOMContentLoaded", async () => {
+
+  dealerSelect = document.getElementById("dealerSelect");
+
+  if (dealerSelect)
+    dealerSelect.addEventListener("change", renderTable);
+
+  const searchBox = document.getElementById("searchBox");
+
+  if(searchBox){
+    searchBox.addEventListener("input",(e)=>{
+      clearTimeout(debounceTimeout);
+
+      debounceTimeout=setTimeout(()=>{
+        searchQuery=e.target.value.toLowerCase();
+        renderTable();
+      },150);
+    });
+  }
+
+  renderHeaders();
+
+  await loadOrders();
+
+  undoStack.push(JSON.stringify(data));
+  redoStack=[];
+});
+
+// ======= Utility Functions =======
+function normalizeData() {
+  data = data.map((row) => {
+    if (!row._id) row._id = crypto.randomUUID();
+    return row;
+  });
+}
+
+async function saveData(){
+  console.log("Saved locally in memory");
+}
+
+function saveState() {
+  undoStack.push(JSON.stringify(data));
+  if (undoStack.length > 50) undoStack.shift();
+  redoStack = [];
+}
+
+function getDuplicateMap() {
+  const map = {};
+  data.forEach((row) => {
+    const key = (row["Tr.Orig.No."] || "").trim().toLowerCase();
+    if (!key) return;
+    map[key] = (map[key] || 0) + 1;
+  });
+  return map;
+}
+
+function getNoteClass(note) {
+  if (!note) return null;
+
+  const n = note.toUpperCase();
+
+  if (n === "IN STOCK") return "note-instock";
+  if (n === "HOLD") return "note-hold";
+  if (n === "WAIT TO RECEIVE") return "note-wait";
+
+  return null;
+}
+
+// ======= Rendering =======
+function renderHeaders() {
+  const headerRow = document.getElementById("headerRow");
+
+  headerRow.innerHTML =
+    "<th>#</th><th>Actions</th><th>Notes</th>" +
+    columns.map((col) => `<th>${col}</th>`).join("") +
+    `<th id="updatedHeader" style="cursor:pointer;">Updated</th>`;
+  document.getElementById("updatedHeader").addEventListener("click", () => {
+    sortByUpdated = true;
+    sortAsc = !sortAsc; // toggle asc/desc
+    loadOrders();
+  });
+}
+
+function formatTime(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+
+  return d.toLocaleString([], {
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+// Sort by Notes if requested
+function renderTable() {
+  const tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
+  const duplicateMap = getDuplicateMap();
+  const fragment = document.createDocumentFragment();
+  const selectedDealer = dealerSelect ? dealerSelect.value : "all";
+
+  let filteredData = data
+    .map((row, index) => ({ row, index }))
+    .filter(({ row }) => {
+      const matchSearch =
+        !searchQuery ||
+        columns.some((col) =>
+          (row[col] || "").toLowerCase().includes(searchQuery)
+        );
+
+      const id = (row["DShipper ID"] || "").trim().toUpperCase();
+
+      const knownDealers = Object.entries(dealerMap)
+        .filter(([k]) => k !== "others")
+        .map(([, v]) => v.toUpperCase());
+
+      const matchDealer =
+        selectedDealer === "all" ||
+        (dealerMap[selectedDealer] &&
+          id === dealerMap[selectedDealer].toUpperCase()) ||
+        (selectedDealer === "others" && !knownDealers.includes(id)); 
+
+      return matchSearch && matchDealer;
+    });
+
+  if (sortByUpdated) {
+    filteredData.sort((a, b) => {
+      const timeA = new Date(a.row._meta?.updatedAt || 0).getTime();
+      const timeB = new Date(b.row._meta?.updatedAt || 0).getTime();
+
+      return sortAsc ? timeA - timeB : timeB - timeA;
+    });
+  }
+
+  filteredData.forEach(({ row, index }, rowIndex) => {
+    const tr = document.createElement("tr");
+
+    const updatedAt = row._meta?.updatedAt;
+    if (updatedAt) {
+      const diff = Date.now() - new Date(updatedAt).getTime();
+
+      if (diff < 5 * 60 * 1000) {
+        tr.classList.add("recent");
+      }
+    }
+
+    // Row number
+    const numberTd = document.createElement("td");
+    numberTd.innerText = rowIndex + 1;
+    tr.appendChild(numberTd);
+
+    // Actions column
+    const actionTd = document.createElement("td");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = !!row._marked;
+    checkbox.addEventListener("change", () => {
+      saveState();
+      row._marked = checkbox.checked;
+      saveData();
+    });
+    actionTd.appendChild(checkbox);
+
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "copy-btn";
+    copyBtn.addEventListener("click", () => copyRow(row._id));
+    actionTd.appendChild(copyBtn);
+ 
+    const deleteBtn = document.createElement("button");
+deleteBtn.className = "delete-btn";
+deleteBtn.textContent = "🗑️";  
+deleteBtn.addEventListener("click", () => deleteRow(row._id));
+    actionTd.appendChild(deleteBtn);
+
+    tr.appendChild(actionTd);
+
+    // Notes column
+    const notesTd = document.createElement("td");
+    notesTd.classList.add("notes");
+    notesTd.classList.add(getNoteClass(row._notes));
+
+    // text span
+    const textSpan = document.createElement("span");
+    textSpan.contentEditable = true;
+    textSpan.innerText = row._notes || "";
+
+    // save before edit
+    textSpan.addEventListener("focus", () => {
+      textSpan.dataset.before = textSpan.innerText;
+    });
+
+    // save on blur
+    textSpan.addEventListener("blur", () => {
+      if (textSpan.dataset.before !== textSpan.innerText) {
+        saveState();
+        row._notes = textSpan.innerText;
+        const cls = getNoteClass(row._notes);
+        notesTd.className = cls ? `notes ${cls}` : "notes";
+
+        row._meta = row._meta || {};
+        row._meta.updatedAt = new Date().toISOString();
+
+        updateOrder(row);
+      }
+    });
+
+    notesTd.appendChild(textSpan);
+
+    // Dropdown button inside cell
+    const dropdownBtn = document.createElement("button");
+    dropdownBtn.textContent = "▼";
+    dropdownBtn.style.marginLeft = "4px";
+    dropdownBtn.style.fontSize = "0.7em";
+    dropdownBtn.style.cursor = "pointer";
+    notesTd.appendChild(dropdownBtn);
+
+    dropdownBtn.addEventListener("click", (e) => {
+      e.stopPropagation(); // prevent focus issues
+
+      const select = document.createElement("select");
+      select.style.position = "absolute";
+      select.style.zIndex = 1000;
+
+      // Add blank option for free text
+      const blank = document.createElement("option");
+      blank.value = "";
+      blank.innerText = "";
+      select.appendChild(blank);
+
+      noteOptions.forEach((opt) => {
+        const option = document.createElement("option");
+        option.value = opt;
+        option.innerText = opt;
+        select.appendChild(option);
+      });
+
+      select.value = row._notes || "";
+      document.body.appendChild(select);
+
+      // Position near button
+      const rect = dropdownBtn.getBoundingClientRect();
+      select.style.left = rect.left + window.scrollX + "px";
+      select.style.top = rect.bottom + window.scrollY + "px";
+
+      select.focus();
+
+      select.addEventListener("change", () => {
+  saveState();
+
+  textSpan.innerText = select.value;
+  row._notes = select.value;
+
+  const cls = getNoteClass(row._notes);
+  notesTd.className = cls ? `notes ${cls}` : "notes";
+
+  updateOrder(row);
+  safeRemove(select);
+});
+
+select.addEventListener("blur", () => {
+  safeRemove(select);
+});  
+    });
+
+    tr.appendChild(notesTd);
+
+    // Data columns
+    columns.forEach((col, colIndex) => {
+      const td = document.createElement("td");
+      td.contentEditable = true;
+      td.innerText = row[col] || "";
+      td.dataset.row = index;
+      td.dataset.id = row._id;
+      td.dataset.col = colIndex;
+
+      // Highlight duplicates only in Tr.Orig.No.
+      if (col === "Tr.Orig.No.") {
+        const key = (row[col] || "").trim().toLowerCase();
+        if (key && duplicateMap[key] > 1) td.classList.add("duplicate");
+      }
+
+      td.addEventListener("focus", () => {
+        td.dataset.before = td.innerText;
+      });
+      td.addEventListener("blur", () => {
+        if (td.dataset.before !== td.innerText) {
+          saveState();
+
+          const id = td.dataset.id;
+          const rowIndex = findRowIndexById(id);
+
+          if (rowIndex !== -1) {
+            data[rowIndex][col] = td.innerText;
+
+            data[rowIndex]._meta = data[rowIndex]._meta || {};
+            data[rowIndex]._meta.updatedAt = new Date().toISOString();
+          }
+
+          updateOrder(data[rowIndex]);
+        }
+      });
+      td.addEventListener("keydown", handleNavigation);
+      tr.appendChild(td);
+    });
+
+    const timeTd = document.createElement("td");
+    timeTd.innerText = formatTime(row._meta?.updatedAt);
+    tr.appendChild(timeTd);
+
+    fragment.appendChild(tr);
+  });
+
+  tbody.appendChild(fragment);
+} 
+
+function safeRemove(el) {
+  if (!el) return;
+
+  try {
+    el.remove(); 
+  } catch (e) {
+    console.warn("remove failed:", e);
+  }
+}
+
+function createEmptyRow() {
+  const now = new Date().toISOString();
+
+  return {
+    _meta: {
+      createdAt: now,
+      updatedAt: now
+    }
+  };
+}
+
+// ======= Row Operations =======
+async function addRow() {
+    saveState();
+
+    const newRow = createEmptyRow();
+
+    const selectedDealer = dealerSelect ? dealerSelect.value : "all";
+    if (selectedDealer !== "all") {
+        newRow["DShipper ID"] = dealerMap[selectedDealer];
+    }
+
+    const inserted = await insertOrder(newRow);
+
+    if (!inserted) {
+        showToast("Failed to create order");
+        return;
+    }
+
+    await loadOrders();
+}
+
+async function deleteRow(id) {
+  saveState();
+  data = data.filter((r) => r._id !== id);
+  await deleteOrderFromDB(id);
+  await loadOrders();
+}
+
+function copyRow(id) {
+  const row = data.find((r) => r._id === id);
+  if (!row) return console.warn("Row not found:", id);
+
+  const text = columns.map((col) => row[col] || "").join("\t");
+
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      console.log("Copied row:", id);
+      showToast("Copied!");
+    })
+    .catch((err) => {
+      console.error("Copy failed:", err);
+      alert("Copy failed");
+    });
+}
+
+function copyMarkedRows() {
+  const marked = data.filter((r) => r._marked);
+
+  if (!marked.length) {
+    showToast("No rows selected");
+    return;
+  }
+
+  const text = marked
+    .map((r) => columns.map((c) => r[c] || "").join("\t"))
+    .join("\n");
+
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      showToast("Selected copied!");
+    })
+    .catch(() => {
+      showToast("Copy failed");
+    });
+}
+
+function showToast(msg) {
+  let toast = document.createElement("div");
+  toast.innerText = msg;
+
+  const container = document.getElementById("tableContainer");
+  if (!container) return;
+  const rect = container.getBoundingClientRect();
+
+  Object.assign(toast.style, {
+    position: "fixed",
+    top: rect.top + 10 + "px",
+    left: rect.right - 120 + "px",
+    background: "#333",
+    color: "#fff",
+    padding: "8px 12px",
+    borderRadius: "6px",
+    fontSize: "14px",
+    zIndex: 9999,
+    opacity: 0.9
+  });
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.remove(), 1000);
+}
+
+// ======= Undo / Redo =======
+function undo(){
+  showToast("Undo will be updated for team mode");
+}
+
+function redo() {
+  if (!redoStack.length) return;
+
+  const next = redoStack.pop();
+  undoStack.push(next);
+
+  data = JSON.parse(next);
+
+  saveData();
+  loadOrders();
+}
+
+function findRowIndexById(id) {
+  return data.findIndex((r) => r._id === id);
+}
+
+// ======= Navigation =======
+function handleNavigation(e) {
+  const td = e.target;
+  if (td.tagName !== "TD") return;
+  let { row, col } = td.dataset;
+  row = parseInt(row);
+  col = parseInt(col);
+  let next;
+
+  switch (e.key) {
+    case "ArrowRight":
+      next = getCell(row, col + 1);
+      break;
+    case "ArrowLeft":
+      next = getCell(row, col - 1);
+      break;
+    case "ArrowDown":
+      next = getCell(row + 1, col);
+      break;
+    case "ArrowUp":
+      next = getCell(row - 1, col);
+      break;
+    case "Enter":
+      e.preventDefault();
+      next = getCell(row + 1, col);
+      break;
+    case "Tab":
+      e.preventDefault();
+      next = getCell(row, col + 1);
+      break;
+  }
+
+  if (next) next.focus();
+  if (row === data.length - 1 && e.key === "Enter") addRow();
+}
+
+function getCell(r, c) {
+  const rows = document.querySelectorAll("#tableBody tr");
+  const row = rows[r];
+  if (!row) return null;
+  return row.querySelector(`td[data-col='${c}']`);
+}
+
+// ======= Paste Handling =======
+document.addEventListener("paste", async (e) => {
+  const active = document.activeElement;
+  if (!active || active.tagName !== "TD") return;
+  if (!active.dataset.col) return;
+
+  e.preventDefault();
+
+  const clipboard = e.clipboardData.getData("text/plain");
+  if (!clipboard) return;
+
+  const rows = clipboard
+    .split(/\r?\n/)
+    .filter((r) => r.trim() !== "")
+    .map((r) => r.split("\t"));
+
+  const startId = active.dataset.id;
+  const startIndex = data.findIndex((r) => r._id === startId);
+
+  const startCol = parseInt(active.dataset.col);
+  if (startIndex === -1 || isNaN(startCol)) return;
+
+  saveState();
+  
+  const changedRows = new Set();
+
+for (const [rIndex, r] of rows.entries()) {
+
+    const targetIndex = startIndex + rIndex;
+
+    if (targetIndex >= data.length) {
+        const newRow = createEmptyRow();
+        data.push(newRow);
+        await insertOrder(newRow);
+    }
+
+    const row = data[targetIndex];
+
+    r.forEach((val, cIndex) => {
+        const colIndex = startCol + cIndex;
+
+        if (colIndex < columns.length) {
+            row[columns[colIndex]] = val;
+        }
+    });
+
+    row._meta = row._meta || {};
+    row._meta.updatedAt = new Date().toISOString();
+
+    changedRows.add(row);
+}
+
+for (const row of changedRows) {
+    await updateOrder(row);
+}
+
+await loadOrders();
+  }); 
+
+// ======= Export =======
+function exportCSV(marked = false) {
+  const exportData = marked ? data.filter((r) => r._marked) : data;
+  if (!exportData.length) {
+    showToast(marked ? "No rows selected" : "No data to export");
+    return;
+  }
+
+  const wsData = [
+    columns,
+    ...exportData.map((r) => columns.map((c) => r[c] || ""))
+  ];
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+  ws["!views"] = [{ state: "frozen", ySplit: 1 }];
+  ws["!cols"] = columns.map((col) => {
+    const maxLen = Math.max(
+      col.length,
+      ...exportData.map((r) => (r[col] || "").toString().length)
+    );
+    return { wch: Math.min(maxLen + 2, 40) };
+  });
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, marked ? "Marked Orders" : "Orders");
+  XLSX.writeFile(wb, marked ? "Marked_Backorders.xlsx" : "Backorders.xlsx");
+}

@@ -1,0 +1,37 @@
+<div class="controls" style="margin-bottom:10px;">
+  <button onclick="exportCSV()">Export CSV</button>
+  <button onclick="exportCSV(true)">Export Selected</button>
+</div>
+
+<label for="searchBox">Search:</label>
+<input id="searchBox" placeholder="Search Orders..." style="margin-bottom:10px; width:200px;">
+
+<br><br>
+
+<label for="dealerSelect">Dealer:</label>
+<select id="dealerSelect">
+  <option value="all">All</option>
+  <option value="redline360">Redline360</option>
+  <option value="ecs">ECS</option>
+  <option value="tdot">TDOT</option>
+  <option value="others">OTHERS</option>
+</select>
+
+<br><br>
+
+<div class="actions">
+  <button onclick="undo()">Undo</button>
+  <button onclick="redo()">Redo</button>
+  <button onclick="addRow()">Add Orders</button>
+  <button onclick="copyMarkedRows()">Copy Selected</button>  
+</div>
+<br>
+
+<div id="tableContainer">
+  <table id="backorderTable" border="1">
+    <thead>
+      <tr id="headerRow"></tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
