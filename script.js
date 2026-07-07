@@ -269,7 +269,8 @@ const dealerMap = {
 const noteOptions = [
   "IN STOCK",
   "WAIT TO RECEIVE",
-  "ETA",
+  "ETA 6-8 Weeks",
+  "ETA ",
   "HOLD",
   "NO ETA",
   "DISCONTINUED"
