@@ -320,9 +320,12 @@ async function saveData(){
   console.log("Saved locally in memory");
 }
 
-function saveState() {
-  undoStack.push(JSON.stringify(data));
-  if (undoStack.length > 50) undoStack.shift();
+function recordAction(action) {
+  undoStack.push(action);
+
+  if (undoStack.length > 100)
+    undoStack.shift();
+
   redoStack = [];
 }
 
@@ -477,7 +480,12 @@ deleteBtn.addEventListener("click", () => deleteRow(row._id));
     // save on blur
     textSpan.addEventListener("blur", () => {
       if (textSpan.dataset.before !== textSpan.innerText) {
-        saveState();
+        recordAction({
+    type: "notes",
+    rowId: row._id,
+    oldValue: textSpan.dataset.before,
+    newValue: textSpan.innerText
+});
         row._notes = textSpan.innerText;
         const cls = getNoteClass(row._notes);
         notesTd.className = cls ? `notes ${cls}` : "notes";
@@ -569,7 +577,13 @@ select.addEventListener("blur", () => {
       });
       td.addEventListener("blur", () => {
         if (td.dataset.before !== td.innerText) {
-          saveState();
+          recordAction({
+            type: "edit",
+            rowId: id,
+            column: col,
+            oldValue: td.dataset.before,
+            newValue: td.innerText
+        });
 
           const id = td.dataset.id;
           const rowIndex = findRowIndexById(id);
@@ -631,6 +645,10 @@ async function addRow() {
     }
 
     const inserted = await insertOrder(newRow);
+      recordAction({
+    type: "add",
+    row: structuredClone(newRow)
+});
 
     if (!inserted) {
         showToast("Failed to create order");
@@ -642,6 +660,14 @@ async function addRow() {
 
 async function deleteRow(id) {
   saveState();
+  const deleted = structuredClone(
+    data.find(r => r._id === id)
+);
+
+recordAction({
+    type: "delete",
+    row: deleted
+});
   data = data.filter((r) => r._id !== id);
   await deleteOrderFromDB(id);
   await loadOrders();
@@ -714,20 +740,114 @@ function showToast(msg) {
 }
 
 // ======= Undo / Redo =======
-function undo(){
-  showToast("Undo will be updated for team mode");
+async function undo() {
+
+    if (!undoStack.length)
+        return;
+
+    const action = undoStack.pop();
+
+    redoStack.push(action);
+
+    switch(action.type){
+
+        case "edit": {
+
+            const row = data.find(r => r._id === action.rowId);
+
+            if(!row) break;
+
+            row[action.column] = action.oldValue;
+
+            await updateOrder(row);
+
+            break;
+        }
+
+        case "notes": {
+
+            const row = data.find(r => r._id === action.rowId);
+
+            if(!row) break;
+
+            row._notes = action.oldValue;
+
+            await updateOrder(row);
+
+            break;
+        }
+
+        case "add": {
+
+            await deleteOrderFromDB(action.row._id);
+
+            break;
+        }
+
+        case "delete": {
+
+            await insertOrder(action.row);
+
+            break;
+        }
+    }
+
+    await loadOrders();
 }
 
-function redo() {
-  if (!redoStack.length) return;
+async function redo(){
 
-  const next = redoStack.pop();
-  undoStack.push(next);
+    if(!redoStack.length)
+        return;
 
-  data = JSON.parse(next);
+    const action = redoStack.pop();
 
-  saveData();
-  loadOrders();
+    undoStack.push(action);
+
+    switch(action.type){
+
+        case "edit": {
+
+            const row = data.find(r => r._id === action.rowId);
+
+            if(!row) break;
+
+            row[action.column] = action.newValue;
+
+            await updateOrder(row);
+
+            break;
+        }
+
+        case "notes": {
+
+            const row = data.find(r => r._id === action.rowId);
+
+            if(!row) break;
+
+            row._notes = action.newValue;
+
+            await updateOrder(row);
+
+            break;
+        }
+
+        case "add": {
+
+            await insertOrder(action.row);
+
+            break;
+        }
+
+        case "delete": {
+
+            await deleteOrderFromDB(action.row._id);
+
+            break;
+        }
+    }
+
+    await loadOrders();
 }
 
 function findRowIndexById(id) {
