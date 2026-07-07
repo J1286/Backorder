@@ -3,6 +3,34 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
+<div id="loginBox">
+  <h2>Backorder Login</h2>
+
+  <input
+    id="email"
+    type="email"
+    placeholder="Email"
+  >
+
+  <br><br>
+
+  <input
+    id="password"
+    type="password"
+    placeholder="Password"
+  >
+
+  <br><br>
+
+  <button onclick="login()">
+    Login
+  </button>
+
+  <p id="loginError" style="color:red;"></p>
+</div>
+
+<div id="app" style="display:none;">
+    
 <body>
 <div class="controls" style="margin-bottom:10px;">
   <button onclick="exportCSV()">Export CSV</button>
@@ -47,4 +75,5 @@
 <script src="script.js"></script>
 
 </body>
+</div>  
 </html>
