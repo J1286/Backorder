@@ -515,24 +515,33 @@ function renderTable() {
     // Actions column
     const actionTd = document.createElement("td");
 
-    const actionBox = document.createElement("div");
-    actionBox.className = "action-box";
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = !!row._marked;
-    checkbox.addEventListener("change", () => {
-      saveState();
-      row._marked = checkbox.checked;
-      saveData();
-    });
-    actionTd.appendChild(checkbox);
+const actionBox = document.createElement("div");
+actionBox.className = "action-box";
 
-    const copyBtn = document.createElement("button");
-    copyBtn.className = "copy-btn";
-    copyBtn.addEventListener("click", () => copyRow(row._id));
-    actionTd.appendChild(copyBtn);
 
-    const historyBtn = document.createElement("button");
+const checkbox = document.createElement("input");
+checkbox.type = "checkbox";
+checkbox.checked = !!row._marked;
+
+checkbox.addEventListener("change", () => {
+  saveState();
+  row._marked = checkbox.checked;
+  saveData();
+});
+
+actionBox.appendChild(checkbox);
+
+
+const copyBtn = document.createElement("button");
+copyBtn.className = "copy-btn";
+copyBtn.title = "Copy";
+
+copyBtn.addEventListener("click", () => copyRow(row._id));
+
+actionBox.appendChild(copyBtn);
+
+
+const historyBtn = document.createElement("button");
 historyBtn.textContent = "📜";
 historyBtn.title = "View History";
 
@@ -540,16 +549,23 @@ historyBtn.addEventListener("click", () => {
   showHistory(row._id);
 });
 
-actionTd.appendChild(historyBtn);
-     
-    const deleteBtn = document.createElement("button");
+actionBox.appendChild(historyBtn);
+
+
+const deleteBtn = document.createElement("button");
 deleteBtn.className = "delete-btn";
-deleteBtn.textContent = "🗑️";  
+deleteBtn.textContent = "🗑️";
+deleteBtn.title = "Delete";
+
 deleteBtn.addEventListener("click", () => deleteRow(row._id));
-    actionTd.appendChild(deleteBtn);
 
-    tr.appendChild(actionTd);
+actionBox.appendChild(deleteBtn);
 
+
+actionTd.appendChild(actionBox);
+
+tr.appendChild(actionTd);
+    
     // Notes column
     const notesTd = document.createElement("td");
     notesTd.classList.add("notes");
