@@ -793,19 +793,36 @@ async function addRow() {
 
     const inserted = await insertOrder(newRow);
 
-    if (!inserted) {
-        showToast("Failed to create order");
-        return;
-    }
+if (!inserted) {
+    showToast("Failed to create order");
+    return;
+}
 
-    await loadOrders();
+await addLog({
+    orderId: inserted.id,
+    action: "CREATE"
+});
+
+await loadOrders();
 }
 
 async function deleteRow(id) {
-  saveState();
-  data = data.filter((r) => r._id !== id);
-  await deleteOrderFromDB(id);
-  await loadOrders();
+
+    if (!confirm("Delete this order?"))
+        return;
+
+    saveState();
+
+    await addLog({
+        orderId: id,
+        action: "DELETE"
+    });
+
+    data = data.filter(r => r._id !== id);
+
+    await deleteOrderFromDB(id);
+
+    await loadOrders();
 }
 
 function copyRow(id) {
