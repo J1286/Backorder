@@ -645,6 +645,7 @@ select.addEventListener("blur", () => {
       td.addEventListener("focus", () => {
         td.dataset.before = td.innerText;
       });
+      
       td.addEventListener("blur", async () => {
 
   if (td.dataset.before !== td.innerText) {
