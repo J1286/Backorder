@@ -180,3 +180,12 @@ th:nth-child(2) {
     min-width: 150px;
     white-space: nowrap;
 }
+
+.actions button,
+td:nth-child(2) button {
+    margin-right: 4px;
+}
+
+#backorderTable {
+    table-layout: auto;
+}
