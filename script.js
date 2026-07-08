@@ -357,21 +357,19 @@ const noteOptions = [
 let dealerSelect;
 let debounceTimeout;
 
-document.getElementById("closeHistory").onclick = () => {
+// ======= Initialization =======
+document.addEventListener("DOMContentLoaded", async () => {
+
+  document.getElementById("closeHistory").onclick = () => {
     document.getElementById("historyModal").style.display = "none";
 };
 
 window.addEventListener("click", e => {
-
     const modal = document.getElementById("historyModal");
 
     if(e.target === modal)
         modal.style.display = "none";
-
 });
-
-// ======= Initialization =======
-document.addEventListener("DOMContentLoaded", async () => {
 
   dealerSelect = document.getElementById("dealerSelect");
 
