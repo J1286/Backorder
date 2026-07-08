@@ -14,10 +14,10 @@
 - ✅ Copy rows
 - ✅ Excel export
 - ✅ Paste from Excel
+- ✅ User authentication
 
 ## Planned Features
 
-- User authentication
 - Better undo/redo
 - Activity log
 - Mobile-friendly layout
