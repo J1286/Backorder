@@ -173,3 +173,10 @@ select {
   font-size: 14px;
   margin-right: 6px;
 }
+
+/* Actions column */
+td:nth-child(2),
+th:nth-child(2) {
+    min-width: 150px;
+    white-space: nowrap;
+}
