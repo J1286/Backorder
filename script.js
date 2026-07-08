@@ -357,6 +357,19 @@ const noteOptions = [
 let dealerSelect;
 let debounceTimeout;
 
+document.getElementById("closeHistory").onclick = () => {
+    document.getElementById("historyModal").style.display = "none";
+};
+
+window.addEventListener("click", e => {
+
+    const modal = document.getElementById("historyModal");
+
+    if(e.target === modal)
+        modal.style.display = "none";
+
+});
+
 // ======= Initialization =======
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -739,24 +752,48 @@ async function showHistory(orderId){
     return;
   }
 
-  let text = "Order History\n\n";
+  const body = document.getElementById("historyBody");
 
-  logs.forEach(log => {
+body.innerHTML = "";
 
-    text +=
-`Time: ${formatTime(log.created_at)}
-User: ${log.user_email}
-Action: ${log.action}
-Field: ${log.field_name || ""}
-${log.old_value || ""} → ${log.new_value || ""}
+logs.forEach(log => {
 
-------------------
+    const div = document.createElement("div");
 
-`;
+    div.className = "history-entry";
 
-  });
+    div.innerHTML = `
 
-  alert(text);
+        <div class="history-time">
+            ${formatTime(log.created_at)}
+        </div>
+
+        <div class="history-user">
+            ${log.user_email}
+        </div>
+
+        <div class="history-action">
+            ${log.action}
+        </div>
+
+        ${
+            log.field_name
+            ?
+            `<div class="history-change">
+                <b>${log.field_name}</b><br>
+                ${log.old_value || ""} → ${log.new_value || ""}
+            </div>`
+            :
+            ""
+        }
+
+    `;
+
+    body.appendChild(div);
+
+});
+
+document.getElementById("historyModal").style.display = "block";
 }
 
 function safeRemove(el) {
