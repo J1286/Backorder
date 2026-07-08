@@ -192,6 +192,12 @@ td:nth-child(2) button {
 
 .action-box {
     display: flex;
-    gap: 5px;
     align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+#backorderTable td:nth-child(2),
+#backorderTable th:nth-child(2) {
+    min-width: 160px;
 }
