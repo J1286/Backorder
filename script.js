@@ -703,6 +703,7 @@ select.addEventListener("blur", () => {
       });
       
       td.addEventListener("blur", async () => {
+        console.log("CELL BLUR", col);
         
   if (td.dataset.before !== td.innerText) {
 
@@ -813,10 +814,8 @@ document.getElementById("historyModal").style.display = "block";
 function safeRemove(el) {
   if (!el) return;
 
-  try {
-    el.remove(); 
-  } catch (e) {
-    console.warn("remove failed:", e);
+  if (el.parentNode) {
+    el.parentNode.removeChild(el);
   }
 }
 
