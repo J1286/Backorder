@@ -647,7 +647,7 @@ select.addEventListener("blur", () => {
       });
       
       td.addEventListener("blur", async () => {
-        console.log("CELL BLUR FIRED", col);
+        
   if (td.dataset.before !== td.innerText) {
 
     saveState();
