@@ -693,14 +693,19 @@ async function deleteRow(id) {
 
 function copyRow(id) {
   const row = data.find((r) => r._id === id);
-  if (!row) return console.warn("Row not found:", id);
+  if (!row) return;
 
-  const text = columns.map((col) => row[col] || "").join("\t");
+  const text = columns
+    .map((col) =>
+      String(row[col] || "")
+        .replace(/\r?\n/g, " ")
+        .trim()
+    )
+    .join("\t");
 
   navigator.clipboard
     .writeText(text)
     .then(() => {
-      console.log("Copied row:", id);
       showToast("Copied!");
     })
     .catch((err) => {
@@ -718,8 +723,16 @@ function copyMarkedRows() {
   }
 
   const text = marked
-    .map((r) => columns.map((c) => r[c] || "").join("\t"))
-    .join("\n");
+  .map((r) =>
+    columns
+      .map((c) =>
+        String(r[c] || "")
+          .replace(/\r?\n/g, " ")
+          .trim()
+      )
+      .join("\t")
+  )
+  .join("\n");
 
   navigator.clipboard
     .writeText(text)
@@ -729,6 +742,12 @@ function copyMarkedRows() {
     .catch(() => {
       showToast("Copy failed");
     });
+}
+
+function cleanText(value){
+    return String(value || "")
+        .replace(/\r?\n/g," ")
+        .trim();
 }
 
 function showToast(msg) {
