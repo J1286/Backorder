@@ -189,3 +189,9 @@ td:nth-child(2) button {
 #backorderTable {
     table-layout: auto;
 }
+
+.action-box {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
