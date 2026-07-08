@@ -595,20 +595,32 @@ tr.appendChild(actionTd);
     });
 
     // save on blur
-    textSpan.addEventListener("blur", () => {
-      if (textSpan.dataset.before !== textSpan.innerText) {
-        saveState();
-        row._notes = textSpan.innerText;
-        const cls = getNoteClass(row._notes);
-        notesTd.className = cls ? `notes ${cls}` : "notes";
+    textSpan.addEventListener("blur", async () => {
 
-        row._meta = row._meta || {};
-        row._meta.updatedAt = new Date().toISOString();
+  if (textSpan.dataset.before !== textSpan.innerText) {
 
-        updateOrder(row);
-      }
+    saveState();
+
+    const oldValue = textSpan.dataset.before;
+    const newValue = textSpan.innerText;
+
+    row._notes = newValue;
+
+    row._meta = row._meta || {};
+    row._meta.updatedAt = new Date().toISOString();
+
+    await addLog({
+      orderId: row._id,
+      action: "UPDATE",
+      fieldName: "Notes",
+      oldValue,
+      newValue
     });
 
+    await updateOrder(row);
+  }
+});
+    
     notesTd.appendChild(textSpan);
 
     // Dropdown button inside cell
