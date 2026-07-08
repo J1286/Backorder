@@ -149,27 +149,15 @@ async function addLog({
   newValue = null
 }) {
 
-  console.log("ADDLOG START", {
-    orderId,
-    action,
-    fieldName,
-    oldValue,
-    newValue
-  });
-
   const { data: userData, error: userError } =
     await supabaseClient.auth.getUser();
 
-  console.log("USER CHECK", userData, userError);
-
-  const user = userData.user;
+    const user = userData.user;
 
   if (!user) {
     console.warn("No logged in user, cannot create log");
     return;
   }
-
-  console.log("INSERTING LOG");
 
   const { data, error } = await supabaseClient
     .from("order_logs")
@@ -183,8 +171,6 @@ async function addLog({
       new_value: newValue
     })
     .select();
-
-  console.log("LOG RESULT", data, error);
 
   if(error){
     console.error("Log failed:", error);
