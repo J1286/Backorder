@@ -94,8 +94,8 @@ async function loadOrders(){
   "Qty 5": row.qty_5 || "",
   "Price 5": row.price_5 || "",
 
-  "Ship Name": row.ship_name || "",
-  "Ship Addr1": row.ship_addr1 || "",
+  "Ship Name": cleanText(row.ship_name) || "",
+  "Ship Addr1": cleanText(row.ship_addr1) || "",
   "Ship Addr2": row.ship_addr2 || "",
   "Ship City": row.ship_city || "",
   "Ship State": row.ship_state || "",
