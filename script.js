@@ -142,6 +142,11 @@ async function insertOrder(row) {
 }
 
 async function addLog({
+  console.log("addLog() called", {
+    orderId,
+    action,
+    fieldName
+});
   orderId,
   action,
   fieldName = null,
