@@ -685,6 +685,7 @@ tr.appendChild(actionTd);
 
   safeRemove(select);
 });
+      saveState();
 
   textSpan.innerText = select.value;
   row._notes = select.value;
