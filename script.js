@@ -514,6 +514,9 @@ function renderTable() {
 
     // Actions column
     const actionTd = document.createElement("td");
+
+    const actionBox = document.createElement("div");
+    actionBox.className = "action-box";
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = !!row._marked;
