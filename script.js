@@ -1,5 +1,4 @@
-console.log("SCRIPT VERSION 2.7");
-alert("SCRIPT VERSION 2.7");
+console.log("SCRIPT STARTED");
 
 const SUPABASE_URL = "https://adcjrkudofddvmcpmdzw.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkY2pya3Vkb2ZkZHZtY3BtZHp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMzNTk5MjAsImV4cCI6MjA5ODkzNTkyMH0.PBRsj25fzx6nz9fdDQb47pLQvJ5xPzQ74tcHPdcfDLI";
