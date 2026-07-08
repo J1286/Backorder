@@ -360,17 +360,6 @@ let debounceTimeout;
 // ======= Initialization =======
 document.addEventListener("DOMContentLoaded", async () => {
 
-  document.getElementById("closeHistory").onclick = () => {
-    document.getElementById("historyModal").style.display = "none";
-};
-
-window.addEventListener("click", e => {
-    const modal = document.getElementById("historyModal");
-
-    if(e.target === modal)
-        modal.style.display = "none";
-});
-
   dealerSelect = document.getElementById("dealerSelect");
 
   if (dealerSelect)
@@ -750,48 +739,24 @@ async function showHistory(orderId){
     return;
   }
 
-  const body = document.getElementById("historyBody");
+  let text = "Order History\n\n";
 
-body.innerHTML = "";
+  logs.forEach(log => {
 
-logs.forEach(log => {
+    text +=
+`Time: ${formatTime(log.created_at)}
+User: ${log.user_email}
+Action: ${log.action}
+Field: ${log.field_name || ""}
+${log.old_value || ""} → ${log.new_value || ""}
 
-    const div = document.createElement("div");
+------------------
 
-    div.className = "history-entry";
+`;
 
-    div.innerHTML = `
+  });
 
-        <div class="history-time">
-            ${formatTime(log.created_at)}
-        </div>
-
-        <div class="history-user">
-            ${log.user_email}
-        </div>
-
-        <div class="history-action">
-            ${log.action}
-        </div>
-
-        ${
-            log.field_name
-            ?
-            `<div class="history-change">
-                <b>${log.field_name}</b><br>
-                ${log.old_value || ""} → ${log.new_value || ""}
-            </div>`
-            :
-            ""
-        }
-
-    `;
-
-    body.appendChild(div);
-
-});
-
-document.getElementById("historyModal").style.display = "block";
+  alert(text);
 }
 
 function safeRemove(el) {
