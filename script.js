@@ -141,6 +141,40 @@ async function insertOrder(row) {
   return inserted;
 }
 
+async function addLog({
+  orderId,
+  action,
+  fieldName = null,
+  oldValue = null,
+  newValue = null
+}) {
+
+  const { data: userData } = await supabaseClient.auth.getUser();
+
+  const user = userData.user;
+
+  if (!user) {
+    console.warn("No logged in user, cannot create log");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("order_logs")
+    .insert({
+      order_id: orderId,
+      user_id: user.id,
+      user_email: user.email,
+      action,
+      field_name: fieldName,
+      old_value: oldValue,
+      new_value: newValue
+    });
+
+  if(error){
+    console.error("Log failed:", error);
+  }
+}
+
 function buildDBRow(row) {
   return {
     dshipper_id: row["DShipper ID"] || "",
@@ -611,23 +645,37 @@ select.addEventListener("blur", () => {
       td.addEventListener("focus", () => {
         td.dataset.before = td.innerText;
       });
-      td.addEventListener("blur", () => {
-        if (td.dataset.before !== td.innerText) {
-          saveState();
+      td.addEventListener("blur", async () => {
 
-          const id = td.dataset.id;
-          const rowIndex = findRowIndexById(id);
+  if (td.dataset.before !== td.innerText) {
 
-          if (rowIndex !== -1) {
-            data[rowIndex][col] = td.innerText;
+    saveState();
 
-            data[rowIndex]._meta = data[rowIndex]._meta || {};
-            data[rowIndex]._meta.updatedAt = new Date().toISOString();
-          }
+    const id = td.dataset.id;
+    const rowIndex = findRowIndexById(id);
 
-          updateOrder(data[rowIndex]);
-        }
+    if (rowIndex !== -1) {
+
+      const oldValue = td.dataset.before;
+      const newValue = td.innerText;
+
+      data[rowIndex][col] = newValue;
+
+      data[rowIndex]._meta = data[rowIndex]._meta || {};
+      data[rowIndex]._meta.updatedAt = new Date().toISOString();
+
+
+      await addLog({
+        orderId: data[rowIndex]._id,
+        action: "UPDATE",
+        fieldName: col,
+        oldValue,
+        newValue
       });
+      await updateOrder(data[rowIndex]);
+    }
+  }
+});
       td.addEventListener("keydown", handleNavigation);
       tr.appendChild(td);
     });
