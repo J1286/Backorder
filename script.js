@@ -528,7 +528,17 @@ function renderTable() {
     copyBtn.className = "copy-btn";
     copyBtn.addEventListener("click", () => copyRow(row._id));
     actionTd.appendChild(copyBtn);
- 
+
+    const historyBtn = document.createElement("button");
+historyBtn.textContent = "📜";
+historyBtn.title = "View History";
+
+historyBtn.addEventListener("click", () => {
+  showHistory(row._id);
+});
+
+actionTd.appendChild(historyBtn);
+     
     const deleteBtn = document.createElement("button");
 deleteBtn.className = "delete-btn";
 deleteBtn.textContent = "🗑️";  
@@ -690,6 +700,45 @@ select.addEventListener("blur", () => {
 
   tbody.appendChild(fragment);
 } 
+
+async function showHistory(orderId){
+
+  const { data: logs, error } = await supabaseClient
+    .from("order_logs")
+    .select("*")
+    .eq("order_id", orderId)
+    .order("created_at", { ascending:false });
+
+  if(error){
+    console.error(error);
+    showToast("Failed to load history");
+    return;
+  }
+
+  if(!logs.length){
+    alert("No history found");
+    return;
+  }
+
+  let text = "Order History\n\n";
+
+  logs.forEach(log => {
+
+    text +=
+`Time: ${formatTime(log.created_at)}
+User: ${log.user_email}
+Action: ${log.action}
+Field: ${log.field_name || ""}
+${log.old_value || ""} → ${log.new_value || ""}
+
+------------------
+
+`;
+
+  });
+
+  alert(text);
+}
 
 function safeRemove(el) {
   if (!el) return;
