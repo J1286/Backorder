@@ -661,31 +661,8 @@ tr.appendChild(actionTd);
 
       select.focus();
 
-      select.addEventListener("change", async () => {
+      select.addEventListener("change", () => {
   saveState();
-
-  const oldValue = row._notes || "";
-  const newValue = select.value;
-
-  textSpan.innerText = newValue;
-  row._notes = newValue;
-
-  const cls = getNoteClass(row._notes);
-  notesTd.className = cls ? `notes ${cls}` : "notes";
-
-  await addLog({
-    orderId: row._id,
-    action: "UPDATE",
-    fieldName: "Notes",
-    oldValue,
-    newValue
-  });
-
-  await updateOrder(row);
-
-  safeRemove(select);
-});
-      saveState();
 
   textSpan.innerText = select.value;
   row._notes = select.value;
