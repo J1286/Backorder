@@ -13,8 +13,10 @@
 - ✅ Search
 - ✅ Copy rows
 - ✅ Excel export
-- ✅ Paste from Excel
+- ✅ Copy/Paste from Excel
 - ✅ User authentication
+- ✅ Audit log
+- ✅ Recent update timestamps
 
 ## Planned Features
 
