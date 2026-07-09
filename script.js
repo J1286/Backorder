@@ -697,8 +697,8 @@ await updateOrder(row);
 safeRemove(select);
 });
 
-select.addEventListener("blur", () => {
-});  
+//select.addEventListener("blur", () => {
+//});  
     });
 
     tr.appendChild(notesTd);
