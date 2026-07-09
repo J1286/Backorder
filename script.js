@@ -158,21 +158,19 @@ async function addLog({
     console.warn("No logged in user, cannot create log");
     return;
   }
-
-  console.log("CURRENT USER:", user);
-console.log("USER METADATA:", user.user_metadata);
   
   const { data, error } = await supabaseClient
     .from("order_logs")
     .insert({
-      order_id: orderId,
-      user_id: user.id,
-      user_email: user.email,
-      action,
-      field_name: fieldName,
-      old_value: oldValue,
-      new_value: newValue
-    })
+  order_id: orderId,
+  user_id: user.id,
+  user_name: user.user_metadata.full_name || user.email,
+  user_email: user.email,
+  action,
+  field_name: fieldName,
+  old_value: oldValue,
+  new_value: newValue
+})
     .select();
 
   if (error) {
