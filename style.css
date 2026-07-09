@@ -60,17 +60,17 @@ td:focus {
 
 /* ===== Actions Column (checkbox + buttons) ===== */
 #backorderTable th:nth-child(2),
-#backorderTable td:nth-child(2) {
-  width: 100px;
-  min-width: 100px;
-  max-width: 80px;
-  text-align: center;
-  position: sticky;
-  left: 40px;
-  background: #fff;
-  z-index: 2;
-}
+#backorderTable td:nth-child(2){
+    position: sticky;
+    left: 40px;
 
+    width: 160px;
+    min-width: 160px;
+    max-width: 160px;
+
+    background: white;
+    z-index: 3;
+}
 /* ===== Last Column (Updated) ===== */
 #backorderTable th:last-child,
 #backorderTable td:last-child {
@@ -187,7 +187,7 @@ td:nth-child(2) button {
 }
 
 #backorderTable {
-    table-layout: auto;
+    table-layout: fixed;
 }
 
 .action-box {
