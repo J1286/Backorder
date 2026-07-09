@@ -211,13 +211,21 @@ td:nth-child(2) button {
 }
 
 .modal-content{
-    background:white;
-    width:700px;
-    max-height:80vh;
-    margin:50px auto;
-    padding:20px;
-    overflow-y:auto;
-    border-radius:8px;
+    width:min(900px,90vw);
+    border-radius:12px;
+    box-shadow:0 10px 35px rgba(0,0,0,.25);
+    animation:popup .18s ease;
+}
+
+@keyframes popup{
+    from{
+        opacity:0;
+        transform:translateY(-20px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
 }
 
 #closeHistory{
@@ -262,4 +270,8 @@ body{
     border-radius:10px;
     background:white;
     box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+tbody tr:nth-child(even){
+    background:#fafafa;
 }
