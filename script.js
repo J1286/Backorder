@@ -43,7 +43,7 @@ async function checkLogin() {
 }
 
 async function logout(){
-   console.log("LOGOUT CLICKED");
+
   const { error } = await supabaseClient.auth.signOut();
 
   if(error){
