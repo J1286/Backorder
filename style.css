@@ -248,3 +248,9 @@ td:nth-child(2) button {
     margin-top:5px;
     font-family:monospace;
 }
+
+body{
+    margin:20px;
+    background:#f4f6f9;
+    font-family:Segoe UI, Arial, sans-serif;
+}
