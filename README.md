@@ -17,6 +17,7 @@
 - ✅ User authentication
 - ✅ Audit log
 - ✅ Recent update timestamps
+- ✅ Log out/Profile
 
 ## Planned Features
 
