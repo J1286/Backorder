@@ -153,6 +153,7 @@ async function addLog({
     await supabaseClient.auth.getUser();
 
     const user = userData.user;
+  console.log(user.user_metadata);
 
   if (!user) {
     console.warn("No logged in user, cannot create log");
