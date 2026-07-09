@@ -36,6 +36,9 @@
   <button onclick="exportCSV()">Export CSV</button>
   <button onclick="exportCSV(true)">Export Selected</button>
 </div>
+    <div style="margin-bottom:10px;">
+  <button onclick="showProfile()">Profile</button>
+</div>
 
 <label for="searchBox">Search:</label>
 <input id="searchBox" placeholder="Search Orders..." style="margin-bottom:10px; width:200px;">
@@ -69,6 +72,24 @@
     <tbody id="tableBody"></tbody>
   </table>
 </div>
+</div>
+
+    <div id="profileModal" class="modal">
+  <div class="modal-content">
+    <span id="closeProfile">&times;</span>
+    <h2>User Profile</h2>
+    <p id="currentEmail"></p>
+
+    <label>
+      Display Name:
+    </label>
+    <br>
+    <input id="displayNameInput" placeholder="Your name">
+    <br><br>
+    <button onclick="saveProfileName()">
+      Save
+    </button>
+  </div>
 </div>
 
     <div id="historyModal" class="modal">
