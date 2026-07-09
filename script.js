@@ -153,12 +153,14 @@ async function addLog({
     await supabaseClient.auth.getUser();
 
     const user = userData.user;
-  console.log(user.user_metadata);
 
   if (!user) {
     console.warn("No logged in user, cannot create log");
     return;
   }
+
+  console.log("CURRENT USER:", user);
+console.log("USER METADATA:", user.user_metadata);
   
   const { data, error } = await supabaseClient
     .from("order_logs")
