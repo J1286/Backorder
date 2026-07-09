@@ -364,6 +364,10 @@ let debounceTimeout;
 // ======= Initialization =======
 document.addEventListener("DOMContentLoaded", async () => {
 
+  document.getElementById("closeProfile").onclick = () => {
+  document.getElementById("profileModal").style.display = "none";
+};
+
   document.getElementById("closeHistory").onclick = () => {
     document.getElementById("historyModal").style.display = "none";
 };
@@ -1124,4 +1128,45 @@ function exportCSV(marked = false) {
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, marked ? "Marked Orders" : "Orders");
   XLSX.writeFile(wb, marked ? "Marked_Backorders.xlsx" : "Backorders.xlsx");
+}
+
+// ======= Display Name =======
+function showProfile(){  
+  document.getElementById("profileModal").style.display = "block";
+  loadProfile();
+}
+
+async function loadProfile(){
+  const { data, error } =
+    await supabaseClient.auth.getUser();
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  const user = data.user;
+  document.getElementById("currentEmail").innerText =
+    user.email;
+  document.getElementById("displayNameInput").value =
+    user.user_metadata.full_name || "";
+}
+
+async function saveProfileName(){
+  const name =
+    document.getElementById("displayNameInput").value.trim();
+
+  const { error } =
+    await supabaseClient.auth.updateUser({
+      data:{
+        full_name:name
+      }
+    });
+
+  if(error){
+    console.error(error);
+    showToast("Update failed");
+    return;
+  }
+
+  showToast("Name updated");
 }
