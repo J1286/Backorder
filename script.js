@@ -675,7 +675,7 @@ row._meta.updatedAt = new Date().toISOString();
 
 const cls = getNoteClass(newValue);
 notesTd.className = cls ? `notes ${cls}` : "notes";
-
+console.log("Saving note log...");
 await addLog({
   orderId: row._id,
   action: "UPDATE",
