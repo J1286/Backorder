@@ -158,13 +158,7 @@ async function addLog({
     console.warn("No logged in user, cannot create log");
     return;
   }
-  console.log({
-    orderId,
-    action,
-    fieldName,
-    oldValue,
-    newValue
-});
+  
   const { data, error } = await supabaseClient
     .from("order_logs")
     .insert({
@@ -683,7 +677,7 @@ row._meta.updatedAt = new Date().toISOString();
 
 const cls = getNoteClass(newValue);
 notesTd.className = cls ? `notes ${cls}` : "notes";
-console.log("Saving note log...");
+
 await addLog({
   orderId: row._id,
   action: "UPDATE",
@@ -697,8 +691,11 @@ await updateOrder(row);
 safeRemove(select);
 });
 
-//select.addEventListener("blur", () => {
-//});  
+  select.addEventListener("blur", () => {
+    setTimeout(() => {
+        safeRemove(select);
+    }, 100);
+});
     });
 
     tr.appendChild(notesTd);
