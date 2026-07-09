@@ -806,9 +806,8 @@ logs.forEach(log => {
         </div>
 
         <div class="history-user">
-            ${log.user_email}
+            ${log.user_name || log.user_email}
         </div>
-
         <div class="history-action">
             ${log.action}
         </div>
