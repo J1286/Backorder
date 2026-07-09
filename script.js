@@ -698,7 +698,6 @@ safeRemove(select);
 });
 
 select.addEventListener("blur", () => {
-  safeRemove(select);
 });  
     });
 
