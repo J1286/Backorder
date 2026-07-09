@@ -254,3 +254,12 @@ body{
     background:#f4f6f9;
     font-family:Segoe UI, Arial, sans-serif;
 }
+
+#tableContainer{
+    max-height:70vh;
+    overflow:auto;
+    border:1px solid #dcdcdc;
+    border-radius:10px;
+    background:white;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
