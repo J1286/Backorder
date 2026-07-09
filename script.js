@@ -178,9 +178,11 @@ async function addLog({
     })
     .select();
 
-  if(error){
+  if (error) {
     console.error("Log failed:", error);
-  }
+} else {
+    console.log("Log inserted successfully");
+}
 }
 
 function buildDBRow(row) {
