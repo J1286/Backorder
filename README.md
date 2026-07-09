@@ -20,6 +20,5 @@
 
 ## Planned Features
 
-- Better undo/redo
-- Activity log
-- Mobile-friendly layout
+- Undo/redo
+- Delete log
