@@ -23,7 +23,7 @@ async function login() {
         return;
     }
 
-    showApp();
+    await showApp();
 }
 
 async function checkLogin() {
@@ -42,14 +42,26 @@ async function checkLogin() {
     }
 }
 
-function showApp() {
+async function logout(){
+
+  const { error } = await supabaseClient.auth.signOut();
+
+  if(error){
+    console.error("Logout failed:", error);
+    return;
+  }
+
+  document.getElementById("loginBox").style.display = "block";
+  document.getElementById("app").style.display = "none";
+
+}
+
+async function showApp() {
 
     document.getElementById("loginBox").style.display = "none";
-
     document.getElementById("app").style.display = "block";
 
-    loadOrders();
-
+    await loadOrders();
 }
 
 let data = [];
