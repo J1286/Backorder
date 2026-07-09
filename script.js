@@ -661,17 +661,32 @@ tr.appendChild(actionTd);
 
       select.focus();
 
-      select.addEventListener("change", () => {
+      select.addEventListener("change", async () => {
   saveState();
 
-  textSpan.innerText = select.value;
-  row._notes = select.value;
+const oldValue = row._notes || "";
+const newValue = select.value;
 
-  const cls = getNoteClass(row._notes);
-  notesTd.className = cls ? `notes ${cls}` : "notes";
+textSpan.innerText = newValue;
+row._notes = newValue;
 
-  updateOrder(row);
-  safeRemove(select);
+row._meta = row._meta || {};
+row._meta.updatedAt = new Date().toISOString();
+
+const cls = getNoteClass(newValue);
+notesTd.className = cls ? `notes ${cls}` : "notes";
+
+await addLog({
+  orderId: row._id,
+  action: "UPDATE",
+  fieldName: "Notes",
+  oldValue,
+  newValue
+});
+
+await updateOrder(row);
+
+safeRemove(select);
 });
 
 select.addEventListener("blur", () => {
