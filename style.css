@@ -60,17 +60,17 @@ td:focus {
 
 /* ===== Actions Column (checkbox + buttons) ===== */
 #backorderTable th:nth-child(2),
-#backorderTable td:nth-child(2){
-    position: sticky;
-    left: 40px;
-
-    width: 160px;
-    min-width: 160px;
-    max-width: 160px;
-
-    background: white;
-    z-index: 3;
+#backorderTable td:nth-child(2) {
+  width: 100px;
+  min-width: 100px;
+  max-width: 80px;
+  text-align: center;
+  position: sticky;
+  left: 40px;
+  background: #fff;
+  z-index: 2;
 }
+
 /* ===== Last Column (Updated) ===== */
 #backorderTable th:last-child,
 #backorderTable td:last-child {
@@ -187,7 +187,7 @@ td:nth-child(2) button {
 }
 
 #backorderTable {
-    table-layout: fixed;
+    table-layout: auto;
 }
 
 .action-box {
@@ -211,21 +211,13 @@ td:nth-child(2) button {
 }
 
 .modal-content{
-    width:min(900px,90vw);
-    border-radius:12px;
-    box-shadow:0 10px 35px rgba(0,0,0,.25);
-    animation:popup .18s ease;
-}
-
-@keyframes popup{
-    from{
-        opacity:0;
-        transform:translateY(-20px);
-    }
-    to{
-        opacity:1;
-        transform:none;
-    }
+    background:white;
+    width:700px;
+    max-height:80vh;
+    margin:50px auto;
+    padding:20px;
+    overflow-y:auto;
+    border-radius:8px;
 }
 
 #closeHistory{
@@ -255,39 +247,4 @@ td:nth-child(2) button {
 .history-change{
     margin-top:5px;
     font-family:monospace;
-}
-
-body{
-    margin:20px;
-    background:#f4f6f9;
-    font-family:Segoe UI, Arial, sans-serif;
-}
-
-#tableContainer{
-    max-height:70vh;
-    overflow:auto;
-    border:1px solid #dcdcdc;
-    border-radius:10px;
-    background:white;
-    box-shadow:0 3px 12px rgba(0,0,0,.08);
-}
-
-tbody tr:nth-child(even){
-    background:#fafafa;
-}
-
-/* ===== Sticky Notes Column ===== */
-#backorderTable th:nth-child(3),
-#backorderTable td:nth-child(3) {
-    position: sticky;
-    left: 200px;      /* after # + Actions */
-    min-width: 180px;
-    max-width: 180px;
-    background: white;
-    z-index: 2;
-}
-
-#backorderTable th:nth-child(3),
-#backorderTable td:nth-child(3){
-    box-shadow: 2px 0 4px rgba(0,0,0,.15);
 }
