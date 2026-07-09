@@ -25,3 +25,4 @@
 - Delete log
 - Realtime updates (two people edit at the same time)
 - View order report
+- View readme
