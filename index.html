@@ -40,6 +40,7 @@
   <button onclick="exportCSV(true)">📝 Export Selected</button>
   <button onclick="showProfile()">👤 Profile</button>
   <button onclick="logout()">Logout</button>
+  <button onclick="showReadme()">README</button>
 
 </div>
 <div id="dashboard" class="dashboard">
@@ -114,6 +115,16 @@
 
 </div>
 
+<div id="readmeModal" class="modal">
+  <div class="modal-content" style="max-width:700px;">
+    <span id="closeReadme">&times;</span>
+
+    <h2>Backorder System Progress</h2>
+
+    <div id="readmeBody"></div>
+  </div>
+</div>
+    
     <div id="profileModal" class="modal">
   <div class="modal-content">
     <span id="closeProfile">&times;</span>
