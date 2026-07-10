@@ -12,16 +12,17 @@
 - ✅ Dealer filtering
 - ✅ Search
 - ✅ Copy rows
-- ✅ Excel export
+- ✅ Excel export/import
 - ✅ Copy/Paste from Excel
 - ✅ User authentication
 - ✅ Audit log
 - ✅ Recent update timestamps
 - ✅ Log out/Profile
+- ✅ Dashboard
+- ✅ Readme
+- ✅ Realtime Synchronization
+- ✅ Undo/Redo
 
 ## Planned Features
 
-- Undo/redo
 - Delete log
-- Realtime updates (two people edit at the same time)
-- View order report
