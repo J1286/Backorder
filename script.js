@@ -319,6 +319,7 @@ let redoStack = [];
 let notesSortAsc = true;
 let sortByUpdated = false;
 let sortAsc = false;
+let realtimeChannel = null; 
 
 // Columns definition
 const columns = [
