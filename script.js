@@ -62,6 +62,7 @@ async function showApp() {
     document.getElementById("app").style.display = "block";
 
     await loadOrders();
+    showOrders();
 
     startRealtime();
 }
@@ -1384,14 +1385,15 @@ async function saveProfileName(){
 }
 
 function showDashboard(){
-    document.getElementById("dashboardView").style.display = "block";
-    document.getElementById("ordersView").style.display = "none";
+    document.getElementById("dashboardPage").style.display = "block";
+    document.getElementById("ordersPage").style.display = "none";
+
     updateDashboard();
 }
 
 function showOrders(){
-    document.getElementById("dashboardView").style.display = "none";
-    document.getElementById("ordersView").style.display = "block";
+    document.getElementById("dashboardPage").style.display = "none";
+    document.getElementById("ordersPage").style.display = "block";
 }
 
 function updateDashboard() {
