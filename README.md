@@ -22,7 +22,8 @@
 - ✅ Readme
 - ✅ Realtime Synchronization
 - ✅ Undo/Redo
+- ✅ Delete log
 
 ## Planned Features
 
-- Delete log
+- 
