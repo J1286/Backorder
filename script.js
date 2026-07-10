@@ -1385,7 +1385,7 @@ function showReadme(){
 <li>✅ CRUD Orders</li>
 <li>✅ Dealer Filtering</li>
 <li>✅ Search</li>
-<li>✅ Export Excel</li>
+<li>✅ Export/Import Excel</li>
 <li>✅ Copy/Paste From Excel</li>
 <li>✅ User Authentication</li>
 <li>✅ Audit History</li>
