@@ -1257,11 +1257,11 @@ function showReadme(){
 <li>✅ Login/Logout</li>
 <li>✅ Dashboard</li>
 <li>✅ Readme</li>
+<li>✅ Realtime Synchronization</li>
 </ul>
 
 <h3>Planned Features</h3>
 <ul>
-<li>⬜ Realtime Updates</li>
 <li>⬜ Undo/Redo</li>
 <li>⬜ Delete Logs</li>
 </ul>
