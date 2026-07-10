@@ -1240,44 +1240,29 @@ function showReadme(){
     const body = document.getElementById("readmeBody");
 
     body.innerHTML = `
-<h3>Current Version</h3>
-<p><b>v0.8</b></p>
-
-<h3>Completed</h3>
+<h3>Active Development</h3>
 <ul>
-<li>✅ Login</li>
 <li>✅ CRUD Orders</li>
-<li>✅ Dashboard</li>
-<li>✅ Dealer Filter</li>
+<li>✅ Dealer Filtering</li>
 <li>✅ Search</li>
 <li>✅ Export Excel</li>
+<li>✅ Copy/Paste From Excel</li>
+<li>✅ User Authentication</li>
 <li>✅ Audit History</li>
 <li>✅ User Profiles</li>
+<li>✅ Update Timestamps</li>
+<li>✅ Login/Logout</li>
+<li>✅ Dashboard</li>
+<li>✅ Readme</li>
 </ul>
 
-<h3>In Progress</h3>
-<ul>
-<li>🚧 Dashboard Improvements</li>
-<li>🚧 Bulk Paste Logging</li>
-<li>🚧 Team Undo</li>
-</ul>
-
-<h3>Planned</h3>
+<h3>Planned Features</h3>
 <ul>
 <li>⬜ Realtime Updates</li>
-<li>⬜ Status Column</li>
-<li>⬜ Import Excel</li>
-<li>⬜ Charts</li>
-<li>⬜ Notifications</li>
+<li>⬜ Undo/Redo</li>
+<li>⬜ Delete Logs</li>
 </ul>
 
-<h3>Known Issues</h3>
-<ul>
-<li>Undo disabled</li>
-<li>Search doesn't include Notes</li>
-<li>No realtime sync</li>
-</ul>
 `;
-
     document.getElementById("readmeModal").style.display = "block";
 }
