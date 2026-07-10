@@ -62,6 +62,8 @@ async function showApp() {
     document.getElementById("app").style.display = "block";
 
     await loadOrders();
+
+    startRealtime();
 }
 
 let data = [];
@@ -1265,4 +1267,41 @@ function showReadme(){
 
 `;
     document.getElementById("readmeModal").style.display = "block";
+}
+
+function startRealtime(){
+
+  if(realtimeChannel){
+    return;
+  }
+
+  realtimeChannel = supabaseClient
+    .channel("orders-live")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "orders"
+      },
+      async (payload)=>{
+
+        console.log("Realtime event:", payload);
+
+        await loadOrders();
+
+        showToast(
+          payload.eventType === "INSERT"
+          ? "New order added"
+          :
+          payload.eventType === "UPDATE"
+          ? "Order updated"
+          :
+          "Order deleted"
+        );
+      }
+    )
+    .subscribe((status)=>{
+      console.log("Realtime status:", status);
+    });
 }
