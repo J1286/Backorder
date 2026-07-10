@@ -759,6 +759,13 @@ safeRemove(select);
       const oldValue = td.dataset.before;
       const newValue = td.innerText;
 
+      addUndoAction({
+    action:"UPDATE",
+    orderId:data[rowIndex]._id,
+    field:col,
+    oldValue,
+    newValue
+});
       data[rowIndex][col] = newValue;
 
       data[rowIndex]._meta = data[rowIndex]._meta || {};
@@ -1002,20 +1009,65 @@ function showToast(msg) {
 }
 
 // ======= Undo / Redo =======
-function undo(){
-  showToast("Undo will be updated for team mode");
+async function undo(){
+
+    const action = undoStack.pop();
+    if(!action){
+        showToast("Nothing to undo");
+        return;
+    }
+
+    const row = data.find(
+        r => r._id === action.orderId
+    );
+
+    if(!row){
+        return;
+    }
+
+    redoStack.push(action);
+    row[action.field] = action.oldValue;
+
+    await updateOrder(row);
+    await loadOrders();
+
+    showToast("Undo completed");
 }
 
-function redo() {
-  if (!redoStack.length) return;
+async function redo(){
 
-  const next = redoStack.pop();
-  undoStack.push(next);
+    const action = redoStack.pop();
+    if(!action){
+        showToast("Nothing to redo");
+        return;
+    }
 
-  data = JSON.parse(next);
+    const row = data.find(
+        r => r._id === action.orderId
+    );
 
-  saveData();
-  loadOrders();
+    if(!row){
+        return;
+    }
+
+    undoStack.push(action);
+    row[action.field] = action.newValue;
+
+    await updateOrder(row);
+    await loadOrders();
+
+    showToast("Redo completed");
+}
+
+function addUndoAction(action){
+
+    undoStack.push(action);
+
+    if(undoStack.length > 100){
+        undoStack.shift();
+    }
+
+    redoStack = [];
 }
 
 function findRowIndexById(id) {
