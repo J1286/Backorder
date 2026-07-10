@@ -908,7 +908,7 @@ async function deleteRow(id) {
 
     if (!confirm("Delete this order?"))
         return;
-
+    
     const row = data.find(r => r._id === id);
     if(!row)
         return;
@@ -927,6 +927,18 @@ async function deleteRow(id) {
         action:"DELETE"
     });
 
+    const row = data.find(r => r._id === id);
+
+console.log("DELETE TARGET:", row);
+if(!row)
+    return;
+undoStack.push({
+    action:"DELETE",
+    orderId:id,
+    oldData: structuredClone(row)
+});
+console.log("DELETE SAVED TO UNDO:", undoStack);
+  
     data = data.filter(
         r => r._id !== id
     );
