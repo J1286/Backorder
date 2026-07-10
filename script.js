@@ -1025,6 +1025,7 @@ function showToast(msg) {
 async function undo(){
 
     const action = undoStack.pop();
+    console.log("UNDO ACTION:", action);
     if(!action){
         showToast("Nothing to undo");
         return;
