@@ -909,18 +909,31 @@ async function deleteRow(id) {
     if (!confirm("Delete this order?"))
         return;
 
-    saveState();
+    const row = data.find(r => r._id === id);
+    if(!row)
+        return;
+
+    // Save delete action for undo
+    undoStack.push({
+        action:"DELETE",
+        orderId:id,
+        oldData: structuredClone(row)
+    });
+
+    redoStack = [];
 
     await addLog({
         orderId: id,
-        action: "DELETE"
+        action:"DELETE"
     });
 
-    data = data.filter(r => r._id !== id);
+    data = data.filter(
+        r => r._id !== id
+    );
 
     await deleteOrderFromDB(id);
-
     await loadOrders();
+    updateUndoButtons();
 }
 
 function copyRow(id) {
@@ -1028,6 +1041,21 @@ async function undo(){
     redoStack.push(action);
     row[action.field] = action.oldValue;
 
+    if(action.action === "DELETE"){
+
+    const restored =
+        await insertOrder(action.oldData);
+    if(restored){
+        await addLog({
+            orderId: restored.id,
+            action:"RESTORE"
+        });
+
+        await loadOrders();
+        showToast("Order restored");
+    }
+    return;
+}
     await updateOrder(row);
     await loadOrders();
 
@@ -1054,6 +1082,17 @@ async function redo(){
     undoStack.push(action);
     row[action.field] = action.newValue;
 
+    if(action.action === "DELETE"){
+    await deleteOrderFromDB(action.orderId);
+    await addLog({
+        orderId: action.orderId,
+        action:"DELETE"
+    });
+
+    await loadOrders();
+    showToast("Order deleted again");
+    return;
+}
     await updateOrder(row);
     await loadOrders();
 
