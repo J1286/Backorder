@@ -1451,7 +1451,7 @@ function showReadme(){
 <li>✅ User Profiles</li>
 <li>✅ Update Timestamps</li>
 <li>✅ Login/Logout</li>
-<li>✅ Dashboard</li>
+<li>✅ Dashboard (Layout)</li>
 <li>✅ Readme</li>
 <li>✅ Realtime Synchronization</li>
 <li>✅ Undo/Redo</li>
