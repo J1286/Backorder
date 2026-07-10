@@ -1458,7 +1458,7 @@ function showReadme(){
 
 <h3>Planned Features</h3>
 <ul>
-<li>⬜ Delete Logs</li>
+<li>⬜ Dashboard updates</li>
 </ul>
 
 `;
