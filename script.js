@@ -1184,6 +1184,17 @@ async function saveProfileName(){
   showToast("Name updated");
 }
 
+function showDashboard(){
+    updateDashboard();
+    document.getElementById("dashboardView").style.display = "block";
+    document.getElementById("ordersView").style.display = "none";
+}
+
+function showOrders(){
+    document.getElementById("dashboardView").style.display = "none";
+    document.getElementById("ordersView").style.display = "block";
+}
+
 function updateDashboard() {
     const total = data.length;
 
