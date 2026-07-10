@@ -926,19 +926,7 @@ async function deleteRow(id) {
         orderId: id,
         action:"DELETE"
     });
-
-    const row = data.find(r => r._id === id);
-
-console.log("DELETE TARGET:", row);
-if(!row)
-    return;
-undoStack.push({
-    action:"DELETE",
-    orderId:id,
-    oldData: structuredClone(row)
-});
-console.log("DELETE SAVED TO UNDO:", undoStack);
-  
+ 
     data = data.filter(
         r => r._id !== id
     );
@@ -1056,19 +1044,27 @@ async function undo(){
 
     if(action.action === "DELETE"){
 
-    const restored =
-        await insertOrder(action.oldData);
-    if(restored){
+    const restoreRow = structuredClone(action.oldData);
+    delete restoreRow._id;
+    delete restoreRow._meta;
+
+    console.log("RESTORING:", restoreRow);
+    const inserted =
+        await insertOrder(restoreRow);
+
+    console.log("INSERT RESULT:", inserted);
+
+    if(inserted){
         await addLog({
-            orderId: restored.id,
+            orderId: inserted.id,
             action:"RESTORE"
         });
-
         await loadOrders();
         showToast("Order restored");
     }
     return;
 }
+  
     await updateOrder(row);
     await loadOrders();
 
