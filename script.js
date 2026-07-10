@@ -1310,11 +1310,11 @@ function showReadme(){
 <li>✅ Dashboard</li>
 <li>✅ Readme</li>
 <li>✅ Realtime Synchronization</li>
+<li>✅ Undo/Redo</li>
 </ul>
 
 <h3>Planned Features</h3>
 <ul>
-<li>⬜ Undo/Redo</li>
 <li>⬜ Delete Logs</li>
 </ul>
 
