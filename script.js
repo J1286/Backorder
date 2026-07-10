@@ -1384,9 +1384,9 @@ async function saveProfileName(){
 }
 
 function showDashboard(){
-    updateDashboard();
     document.getElementById("dashboardView").style.display = "block";
     document.getElementById("ordersView").style.display = "none";
+    updateDashboard();
 }
 
 function showOrders(){
