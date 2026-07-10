@@ -1032,6 +1032,7 @@ async function undo(){
     await loadOrders();
 
     showToast("Undo completed");
+    updateUndoButtons(); 
 }
 
 async function redo(){
@@ -1057,6 +1058,7 @@ async function redo(){
     await loadOrders();
 
     showToast("Redo completed");
+    updateUndoButtons(); 
 }
 
 function addUndoAction(action){
@@ -1068,6 +1070,19 @@ function addUndoAction(action){
     }
 
     redoStack = [];
+    updateUndoButtons(); 
+}
+
+function updateUndoButtons(){
+
+    const undoBtn = document.getElementById("undoBtn");
+    const redoBtn = document.getElementById("redoBtn");
+
+    if(undoBtn)
+        undoBtn.disabled = undoStack.length === 0;
+
+    if(redoBtn)
+        redoBtn.disabled = redoStack.length === 0;
 }
 
 function findRowIndexById(id) {
