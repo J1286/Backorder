@@ -33,12 +33,15 @@
 <div id="app" style="display:none;">
     
 <div class="controls" style="margin-bottom:12px;">
+
+  <button onclick="showDashboard()">Dashboard</button>
+  <button onclick="showOrders()">Orders</button>
   <button onclick="exportCSV()">Export CSV</button>
   <button onclick="exportCSV(true)">Export Selected</button>
   <button onclick="showProfile()">Profile</button>
   <button onclick="logout()">Logout</button>
-</div>
 
+</div>
 <div id="dashboard" class="dashboard">
 
   <div class="dashboard-card" id="cardTotal">
@@ -67,7 +70,14 @@
   </div>
 
 </div>
+
+<div id="dashboardView" style="display:none;">
+    <h2>Dashboard</h2>
+    <div id="dashboard"></div>
+</div>
     
+ <div id="ordersView">
+     
 <label for="searchBox">Search:</label>
 <input id="searchBox" placeholder="Search Orders..." style="margin-bottom:10px; width:200px;">
 
@@ -100,6 +110,8 @@
     <tbody id="tableBody"></tbody>
   </table>
 </div>
+</div>
+
 </div>
 
     <div id="profileModal" class="modal">
