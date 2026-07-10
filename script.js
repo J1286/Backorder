@@ -386,6 +386,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("historyModal").style.display = "none";
 };
 
+  document.getElementById("closeReadme").onclick = () => {
+    document.getElementById("readmeModal").style.display = "none";
+};
+
 window.addEventListener("click", e => {
     const modal = document.getElementById("historyModal");
 
@@ -1229,4 +1233,51 @@ function updateDashboard() {
     document.getElementById("ecsOrders").innerText = ecs;
     document.getElementById("tdotOrders").innerText = tdot;
     document.getElementById("otherOrders").innerText = others;
+}
+
+function showReadme(){
+
+    const body = document.getElementById("readmeBody");
+
+    body.innerHTML = `
+<h3>Current Version</h3>
+<p><b>v0.8</b></p>
+
+<h3>Completed</h3>
+<ul>
+<li>✅ Login</li>
+<li>✅ CRUD Orders</li>
+<li>✅ Dashboard</li>
+<li>✅ Dealer Filter</li>
+<li>✅ Search</li>
+<li>✅ Export Excel</li>
+<li>✅ Audit History</li>
+<li>✅ User Profiles</li>
+</ul>
+
+<h3>In Progress</h3>
+<ul>
+<li>🚧 Dashboard Improvements</li>
+<li>🚧 Bulk Paste Logging</li>
+<li>🚧 Team Undo</li>
+</ul>
+
+<h3>Planned</h3>
+<ul>
+<li>⬜ Realtime Updates</li>
+<li>⬜ Status Column</li>
+<li>⬜ Import Excel</li>
+<li>⬜ Charts</li>
+<li>⬜ Notifications</li>
+</ul>
+
+<h3>Known Issues</h3>
+<ul>
+<li>Undo disabled</li>
+<li>Search doesn't include Notes</li>
+<li>No realtime sync</li>
+</ul>
+`;
+
+    document.getElementById("readmeModal").style.display = "block";
 }
