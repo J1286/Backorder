@@ -26,4 +26,4 @@
 
 ## Planned Features
 
-- 
+- Dashboard updates
