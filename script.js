@@ -373,7 +373,8 @@ const noteOptions = [
   "ETA ",
   "HOLD",
   "NO ETA",
-  "DISCONTINUED"
+  "DISCONTINUED",
+  "STOCK ORDER"
 ];
 
 let dealerSelect;
@@ -463,6 +464,7 @@ function getNoteClass(note) {
   if (n === "IN STOCK") return "note-instock";
   if (n === "HOLD") return "note-hold";
   if (n === "WAIT TO RECEIVE") return "note-wait";
+  if (n === "STOCK ORDER") return "note-wait";
 
   return null;
 }
