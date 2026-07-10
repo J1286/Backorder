@@ -1287,7 +1287,7 @@ function startRealtime(){
       },
       async (payload)=>{
 
-        console.log("Realtime event:", payload);
+        console.log("Realtime event:", payload.new.id); 
 
         await loadOrders();
 
