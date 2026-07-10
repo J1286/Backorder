@@ -1191,7 +1191,7 @@ for (const row of changedRows) {
 await loadOrders();
   }); 
 
-// ======= Export =======
+// ======= Export / Import =======
 function exportCSV(marked = false) {
   const exportData = marked ? data.filter((r) => r._marked) : data;
   if (!exportData.length) {
@@ -1215,6 +1215,76 @@ function exportCSV(marked = false) {
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, marked ? "Marked Orders" : "Orders");
   XLSX.writeFile(wb, marked ? "Marked_Backorders.xlsx" : "Backorders.xlsx");
+}
+
+function importExcel(){
+
+  const input = document.getElementById("excelInput");
+  input.value = "";
+  input.click();
+
+  input.onchange = async () => {
+    const file = input.files[0];
+    if(!file)
+      return;
+
+    await processExcel(file);
+  };
+}
+
+async function processExcel(file){
+  
+  const buffer = await file.arrayBuffer();
+  const workbook = XLSX.read(buffer);
+  const sheet =
+    workbook.Sheets[workbook.SheetNames[0]];
+  const rows =
+    XLSX.utils.sheet_to_json(sheet, {
+      header:1
+    });
+
+  if(rows.length < 2){
+    showToast("No data found");
+    return;
+  }
+  const headers = rows[0];
+  const importedRows = rows
+    .slice(1)
+    .map(row => {
+      const newRow = createEmptyRow();
+
+      headers.forEach((header,index)=>{
+        if(columns.includes(header)){
+          newRow[header] =
+            row[index] ?? "";
+        }
+      });
+      return newRow;
+    });
+
+  await insertImportedOrders(importedRows);
+}
+
+async function insertImportedOrders(rows){
+  
+  let count = 0;
+  for(const row of rows){
+    const inserted =
+      await insertOrder(row);
+
+    if(inserted){
+      count++;
+      await addLog({
+        orderId: inserted.id,
+        action:"CREATE"
+      });
+    }
+  }
+
+  await loadOrders();
+  showToast(
+    `${count} orders imported`
+  );
 }
 
 // ======= Display Name =======
