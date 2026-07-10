@@ -1435,6 +1435,7 @@ function showReadme(){
 <li>✅ Readme</li>
 <li>✅ Realtime Synchronization</li>
 <li>✅ Undo/Redo</li>
+<li>✅ Delete logs</li>
 </ul>
 
 <h3>Planned Features</h3>
