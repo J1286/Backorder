@@ -967,6 +967,50 @@ function copyRow(id) {
     });
 }
 
+async function deleteMarkedRows() {
+
+    const marked = data.filter(r => r._marked);
+    if (!marked.length) {
+        showToast("No rows selected");
+        return;
+    }
+
+    if (!confirm(`Delete ${marked.length} selected order(s)?`))
+        return;
+
+    for (const row of marked) {
+        addUndoAction({
+            action: "DELETE",
+            orderId: row._id,
+            oldData: structuredClone(row)
+        });
+
+        await addLog({
+            orderId: row._id,
+            action: "DELETE"
+        });
+
+        const ids = marked.map(r => r._id);
+        await deleteOrderFromDB(row._id);
+    }
+
+    await loadOrders();
+    showToast(`${marked.length} orders deleted`);
+}
+
+async function deleteOrdersFromDB(ids){
+
+    const { error } =
+        await supabaseClient
+            .from("orders")
+            .delete()
+            .in("id", ids);
+
+    if(error){
+        console.error(error);
+    }
+}
+
 function copyMarkedRows() {
   const marked = data.filter((r) => r._marked);
 
