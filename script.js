@@ -629,10 +629,16 @@ tr.appendChild(actionTd);
 
   if (textSpan.dataset.before !== textSpan.innerText) {
 
-    saveState();
-
     const oldValue = textSpan.dataset.before;
     const newValue = textSpan.innerText;
+
+    addUndoAction({
+      action: "UPDATE",
+      orderId: row._id,
+      field: "_notes",
+      oldValue,
+      newValue
+    });
 
     row._notes = newValue;
 
@@ -692,12 +698,18 @@ tr.appendChild(actionTd);
       select.focus();
 
       select.addEventListener("change", async () => {
-  saveState();
+        const oldValue = row._notes || "";
+        const newValue = select.value;
 
-const oldValue = row._notes || "";
-const newValue = select.value;
+      addUndoAction({
+        action: "UPDATE",
+        orderId: row._id,
+        field: "_notes",
+        oldValue,
+        newValue
+      });
 
-textSpan.innerText = newValue;
+row._notes = newValue;
 row._notes = newValue;
 
 row._meta = row._meta || {};
