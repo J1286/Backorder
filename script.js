@@ -36,7 +36,7 @@ async function checkLogin() {
 
     } else {
 
-        document.getElementById("loginBtn").style.display = "block";
+        document.getElementById("loginBox").style.display = "block";
         document.getElementById("app").style.display = "none";
 
     }
@@ -51,7 +51,7 @@ async function logout(){
     return;
   }
 
-  document.getElementById("loginBtn").style.display = "block";
+  document.getElementById("loginBox").style.display = "block";
   document.getElementById("app").style.display = "none";
 
 }
@@ -1555,3 +1555,4 @@ function startRealtime(){
       console.log("Realtime status:", status);
     });
 }
+
