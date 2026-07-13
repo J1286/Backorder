@@ -363,6 +363,7 @@ const dealerMap = {
   redline360: "W7232",
   ecs: "W6938",
   tdot: "W7290",
+  z2: "W7292",
   others: "OTHERS"
 };
 
@@ -1453,6 +1454,7 @@ function updateDashboard() {
     let redline = 0;
     let ecs = 0;
     let tdot = 0;
+    let z2 = 0;
     let others = 0;
 
     data.forEach(row => {
@@ -1471,6 +1473,10 @@ function updateDashboard() {
                 tdot++;
                 break;
 
+          case "W7292":
+                z2++;
+                break;
+
             default:
                 others++;
         }
@@ -1480,6 +1486,7 @@ function updateDashboard() {
     document.getElementById("redlineOrders").innerText = redline;
     document.getElementById("ecsOrders").innerText = ecs;
     document.getElementById("tdotOrders").innerText = tdot;
+    document.getElementById("z2Orders").innerText = z2;
     document.getElementById("otherOrders").innerText = others;
 }
 
