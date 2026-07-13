@@ -20,10 +20,13 @@
 - ✅ Log out/Profile
 - ✅ Dashboard
 - ✅ Readme
-- ✅ Realtime Synchronization
+- ✅ Realtime Sync
 - ✅ Undo/Redo
 - ✅ Delete log
+- ✅ Bulk Delete
 
 ## Planned Features
 
 - Dashboard updates
+- Select all
+- Readme in separate HTML or Markdown file
