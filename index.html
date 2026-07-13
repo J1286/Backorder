@@ -1,4 +1,8 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Backorder System</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -23,7 +27,7 @@
 
   <br><br>
 
-  <button onclick="login()">
+  <button id="loginBtn">
     Login
   </button>
 
@@ -35,7 +39,7 @@
 <div class="controls" style="margin-bottom:12px;">
 
   <button onclick="showDashboard()">📊 Dashboard</button>
-    <div id="dashboardPage">
+    <div id="dashboardPage" style="display:none;">
         <div id="dashboard" class="dashboard">
             <div class="dashboard-card" id="cardTotal">
                <div class="dashboard-title">Total Orders</div>
