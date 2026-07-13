@@ -423,9 +423,6 @@ window.addEventListener("click", e => {
   renderHeaders();
 
   await checkLogin(); 
-
-  undoStack.push(JSON.stringify(data));
-  redoStack=[];
 });
 
 // ======= Utility Functions =======
@@ -567,9 +564,7 @@ checkbox.type = "checkbox";
 checkbox.checked = !!row._marked;
 
 checkbox.addEventListener("change", () => {
-  saveState();
   row._marked = checkbox.checked;
-  saveData();
 });
 
 actionBox.appendChild(checkbox);
@@ -763,8 +758,6 @@ safeRemove(select);
         console.log("CELL BLUR", col);
         
   if (td.dataset.before !== td.innerText) {
-
-    saveState();
 
     const id = td.dataset.id;
     const rowIndex = findRowIndexById(id);
