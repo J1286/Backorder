@@ -1505,11 +1505,14 @@ function showReadme(){
 <li>✅ Realtime Synchronization</li>
 <li>✅ Undo/Redo</li>
 <li>✅ Delete logs</li>
+<li>✅ Bulk Delete</li>
 </ul>
 
 <h3>Planned Features</h3>
 <ul>
 <li>⬜ Dashboard updates</li>
+<li>⬜ Select All</li>
+<li>⬜ Readme in a separate HTML or markdown file</li>
 </ul>
 
 `;
