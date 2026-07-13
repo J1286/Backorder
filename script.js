@@ -402,6 +402,12 @@ window.addEventListener("click", e => {
         modal.style.display = "none";
 });
 
+  document.getElementById("loginBox").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        login();
+    }
+});
+
   dealerSelect = document.getElementById("dealerSelect");
 
   if (dealerSelect)
