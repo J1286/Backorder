@@ -997,7 +997,7 @@ async function deleteMarkedRows() {
         });
 
         const ids = marked.map(r => r._id);
-        await deleteOrderFromDB(row._id);
+        await deleteOrdersFromDB(ids);
     }
 
     await loadOrders();
