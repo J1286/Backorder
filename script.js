@@ -984,21 +984,10 @@ async function deleteMarkedRows() {
     if (!confirm(`Delete ${marked.length} selected order(s)?`))
         return;
 
-    for (const row of marked) {
-        addUndoAction({
-            action: "DELETE",
-            orderId: row._id,
-            oldData: structuredClone(row)
-        });
-
-        await addLog({
-            orderId: row._id,
-            action: "DELETE"
-        });
-
-        const ids = marked.map(r => r._id);
-        await deleteOrdersFromDB(ids);
-    }
+    addUndoAction({
+    action: "BULK_DELETE",
+    rows: marked.map(row => structuredClone(row))
+});
 
     await loadOrders();
     showToast(`${marked.length} orders deleted`);
@@ -1088,6 +1077,28 @@ async function undo(){
         showToast("Nothing to undo");
         return;
     }
+
+    if (action.action === "BULK_DELETE") {
+      for (const oldRow of action.rows) {
+
+        const restoreRow = structuredClone(oldRow);
+        delete restoreRow._id;
+        delete restoreRow._meta;
+        const inserted = await insertOrder(restoreRow);
+
+        if (inserted) {
+            await addLog({
+                orderId: inserted.id,
+                action: "RESTORE"
+            });
+        }
+    }
+
+    await loadOrders();
+    showToast(`${action.rows.length} orders restored`);
+    updateUndoButtons();
+    return;
+}
 
     if(action.action === "DELETE"){
 
