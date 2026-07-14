@@ -202,6 +202,15 @@ td:nth-child(2) button {
     min-width: 160px;
 }
 
+td:nth-child(3),
+th:nth-child(3) {
+    position: sticky;
+    left: 130px;
+}
+
+background: white;
+z-index: 5;
+
 .modal{
     display:none;
     position:fixed;
