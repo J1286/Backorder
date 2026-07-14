@@ -1002,7 +1002,6 @@ async function deleteMarkedRows() {
 
     // Delete all from database
     const ids = marked.map(r => r._id);
-  console.log("Deleting IDs:", ids);
     await deleteOrdersFromDB(ids);
     await loadOrders();
     showToast(`${marked.length} orders deleted`);
