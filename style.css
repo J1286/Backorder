@@ -1,22 +1,18 @@
 /* ===== Base Table ===== */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: Arial, sans-serif;
-}
-
-#backorderTable {
-    table-layout: auto;
+  border-collapse: collapse;
+  width: 100%;
+  font-family: Arial, sans-serif
 }
 
 th,
 td {
-    border: 1px solid #ccc;
-    padding: 4px 6px;
-    text-align: left;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  border: 1px solid #ccc;
+  padding: 4px 6px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Header */
@@ -91,32 +87,42 @@ td:focus {
   min-width: 140px;
 }
 
+#backorderTable thead th:nth-child(-n+3) {
+    z-index: 20;
+}
+
 /* ===== Buttons ===== */
 button {
-    cursor: pointer;
-    border: none;
-    background: transparent;
-    padding: 2px 6px;
-    border-radius: 4px;
-    transition: .2s;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 2px 6px;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
 }
 
+/* Neutral hover */
 button:hover {
-    background: #e0e0e0;
+  background: #e0e0e0;
 }
 
-.copy-btn::before {
-    content: "📋";
+/* Copy button */
+button.copy-btn::before {
+  content: "📋";
+}
+button.copy-btn:hover {
+  background: #4caf50;
+  color: white;
 }
 
-.copy-btn:hover {
-    background: #4caf50;
-    color: white;
+/* Delete button */
+button.delete-btn {
+  min-width: 20px;
 }
-
-.delete-btn:hover {
-    background: #f44336;
-    color: white;
+button.delete-btn:hover {
+  background: #f44336;
+  color: white;
 }
 
 /* ===== Empty Cells ===== */
@@ -180,22 +186,12 @@ select {
     table-layout: auto;
 }
 
-.action-box{
-    display:flex;
-    align-items:center;
-    gap:5px;
-    white-space:nowrap;
+.action-box {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
 }
-
-.actions button{
-    margin-right:6px;
-}
-
-td:nth-child(2) input[type="checkbox"]{
-    margin-right:4px;
-}
-
-@keyframes fadeHighlight
 
 .modal{
     display:none;
