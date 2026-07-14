@@ -976,6 +976,7 @@ function copyRow(id) {
 async function deleteMarkedRows() {
 
     const marked = data.filter(r => r._marked);
+
     if (!marked.length) {
         showToast("No rows selected");
         return;
@@ -984,26 +985,27 @@ async function deleteMarkedRows() {
     if (!confirm(`Delete ${marked.length} selected order(s)?`))
         return;
 
+    // Save ONE undo action
     addUndoAction({
-    action: "BULK_DELETE",
-    rows: marked.map(row => structuredClone(row))
-});
+        action: "BULK_DELETE",
+        rows: marked.map(row => structuredClone(row))
+    });
 
-    await loadOrders();
-    showToast(`${marked.length} orders deleted`);
-}
+    // Log every delete
+    for (const row of marked) {
 
-async function deleteOrdersFromDB(ids){
-
-    const { error } =
-        await supabaseClient
-            .from("orders")
-            .delete()
-            .in("id", ids);
-
-    if(error){
-        console.error(error);
+        await addLog({
+            orderId: row._id,
+            action: "DELETE"
+        });
     }
+
+    // Delete all from database
+    const ids = marked.map(r => r._id);
+    await deleteOrdersFromDB(ids);
+    await loadOrders();
+
+    showToast(`${marked.length} orders deleted`);
 }
 
 function copyMarkedRows() {
