@@ -1002,10 +1002,27 @@ async function deleteMarkedRows() {
 
     // Delete all from database
     const ids = marked.map(r => r._id);
+  console.log("Deleting IDs:", ids);
     await deleteOrdersFromDB(ids);
     await loadOrders();
-
     showToast(`${marked.length} orders deleted`);
+}
+
+async function deleteOrdersFromDB(ids){
+
+    console.log("deleteOrdersFromDB received:", ids);
+
+    const { error } =
+        await supabaseClient
+            .from("orders")
+            .delete()
+            .in("id", ids);
+
+    console.log("Delete error:", error);
+
+    if(error){
+        console.error(error);
+    }
 }
 
 function copyMarkedRows() {
