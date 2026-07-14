@@ -1002,9 +1002,25 @@ async function deleteMarkedRows() {
 
     // Delete all from database
     const ids = marked.map(r => r._id);
-    await deleteOrdersFromDB(ids);
-    await loadOrders();
-    showToast(`${marked.length} orders deleted`);
+
+// Save one undo action
+addUndoAction({
+    action: "BULK_DELETE",
+    rows: marked.map(r => structuredClone(r))
+});
+
+// Log each delete
+for (const row of marked) {
+    await addLog({
+        orderId: row._id,
+        action: "DELETE"
+    });
+}
+
+// One database request
+await deleteOrdersFromDB(ids);
+await loadOrders();
+showToast(`${marked.length} orders deleted`);
 }
 
 async function deleteOrdersFromDB(ids){
