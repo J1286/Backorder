@@ -208,8 +208,16 @@ th:nth-child(3) {
     left: 130px;
 }
 
-background: white;
-z-index: 5;
+#backorderTable thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
+}
+
+#backorderTable thead th:nth-child(-n+3) {
+    z-index: 20;
+}
 
 .modal{
     display:none;
