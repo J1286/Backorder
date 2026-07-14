@@ -439,10 +439,6 @@ function normalizeData() {
   });
 }
 
-async function saveData(){
-  console.log("Saved locally in memory");
-}
-
 function saveState() {
   undoStack.push(JSON.stringify(data));
   if (undoStack.length > 50) undoStack.shift();
