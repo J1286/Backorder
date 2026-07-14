@@ -140,15 +140,6 @@ td:empty {
   animation: fadeHighlight 5s ease forwards;
 }
 
-@keyframes fadeHighlight {
-  from {
-    background-color: #e8f5e9;
-  }
-  to {
-    background-color: transparent;
-  }
-}
-
 /* ===== Notes Colors ===== */
 .note-instock {
   background: #fff3a6; /* yellow */
@@ -264,5 +255,14 @@ select {
 .dashboard-value{
     font-size:32px;
     font-weight:bold;
+
+  @keyframes fadeHighlight {
+  from {
+    background-color: #e8f5e9;
+  }
+  to {
+    background-color: transparent;
+  }
+}
     margin-top:8px;
 }
