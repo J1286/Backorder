@@ -614,6 +614,7 @@ tr.appendChild(actionTd);
       if (cls) {
         notesTd.classList.add(cls);
     }
+    console.log("Render note:", row._notes, "class:", cls);
 
     // text span
     const textSpan = document.createElement("span");
