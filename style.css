@@ -87,6 +87,13 @@ td:focus {
   min-width: 140px;
 }
 
+#backorderTable thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
+}
+
 #backorderTable thead th:nth-child(-n+3) {
     z-index: 20;
 }
@@ -138,6 +145,15 @@ td:empty {
 /* ===== Recently Updated Highlight ===== */
 .recent {
   animation: fadeHighlight 5s ease forwards;
+}
+
+@keyframes fadeHighlight {
+  from {
+    background-color: #e8f5e9;
+  }
+  to {
+    background-color: transparent;
+  }
 }
 
 /* ===== Notes Colors ===== */
@@ -255,14 +271,5 @@ select {
 .dashboard-value{
     font-size:32px;
     font-weight:bold;
-
-  @keyframes fadeHighlight {
-  from {
-    background-color: #e8f5e9;
-  }
-  to {
-    background-color: transparent;
-  }
-}
     margin-top:8px;
 }
