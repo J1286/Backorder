@@ -715,6 +715,7 @@ console.log("newValue:", `"${newValue}"`);
 console.log("class:", getNoteClass(newValue));
 const cls = getNoteClass(newValue);
 notesTd.className = cls ? `notes ${cls}` : "notes";
+        console.log(notesTd.className); 
 
 await addLog({
   orderId: row._id,
