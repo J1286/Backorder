@@ -1602,3 +1602,9 @@ function startRealtime(){
     });
 }
 
+function openDropShip() {
+  window.open(
+    "https://j1286.github.io/dshiper/",
+    "_blank"
+  );
+}
