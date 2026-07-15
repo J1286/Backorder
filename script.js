@@ -608,8 +608,12 @@ tr.appendChild(actionTd);
     
     // Notes column
     const notesTd = document.createElement("td");
-    notesTd.classList.add("notes");
-    notesTd.classList.add(getNoteClass(row._notes));
+      notesTd.classList.add("notes");
+
+    const cls = getNoteClass(row._notes);
+      if (cls) {
+        notesTd.classList.add(cls);
+    }
 
     // text span
     const textSpan = document.createElement("span");
@@ -711,11 +715,8 @@ row._notes = newValue;
 row._meta = row._meta || {};
 row._meta.updatedAt = new Date().toISOString();
 
-console.log("newValue:", `"${newValue}"`);
-console.log("class:", getNoteClass(newValue));
 const cls = getNoteClass(newValue);
 notesTd.className = cls ? `notes ${cls}` : "notes";
-        console.log(notesTd.className); 
 
 await addLog({
   orderId: row._id,
