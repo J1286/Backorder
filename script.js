@@ -711,6 +711,8 @@ row._notes = newValue;
 row._meta = row._meta || {};
 row._meta.updatedAt = new Date().toISOString();
 
+console.log("newValue:", `"${newValue}"`);
+console.log("class:", getNoteClass(newValue));
 const cls = getNoteClass(newValue);
 notesTd.className = cls ? `notes ${cls}` : "notes";
 
