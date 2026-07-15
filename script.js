@@ -464,7 +464,6 @@ function getNoteClass(note) {
   if (n === "HOLD") return "note-hold";
   if (n === "WAIT TO RECEIVE") return "note-wait";
   if (n === "STOCK ORDER") return "note-wait";
-  if (n === "DISCONTINUED") return "note-discontinued";
 
   return null;
 }
@@ -609,12 +608,8 @@ tr.appendChild(actionTd);
     
     // Notes column
     const notesTd = document.createElement("td");
-      notesTd.classList.add("notes");
-
-    const cls = getNoteClass(row._notes);
-      if (cls) {
-        notesTd.classList.add(cls);
-    }
+    notesTd.classList.add("notes");
+    notesTd.classList.add(getNoteClass(row._notes));
 
     // text span
     const textSpan = document.createElement("span");
@@ -1607,9 +1602,3 @@ function startRealtime(){
     });
 }
 
-function openDropShip() {
-  window.open(
-    "https://j1286.github.io/dshiper/",
-    "_blank"
-  );
-}
