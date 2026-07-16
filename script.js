@@ -1386,38 +1386,36 @@ async function processExcel(file){
 
 async function insertImportedOrders(rows){
 
-  const dbRows = rows.map(row => mapRowToDB(row));
+    const dbRows = rows.map(mapRowToDB);
 
-  const { data: inserted, error } =
-    await supabaseClient
-      .from("orders")
-      .insert(dbRows)
-      .select();
+    const { data: inserted, error } =
+        await supabaseClient
+            .from("orders")
+            .insert(dbRows)
+            .select();
 
-  if(error){
-    console.error("Bulk import failed:", error);
-    showToast("Import failed");
-    return;
-  }
+    if(error){
+        console.error(error);
+        showToast("Import failed");
+        return;
+    }
 
-  // create logs
-  const logs = inserted.map(row => ({
-    order_id: row.id,
-  }));
-
-  for(const log of logs){
-    await addLog({
-      orderId: inserted[0].id,
-      action: "IMPORT",
-      newValue: `${inserted.length} orders imported`
+    // restore ids back into JS objects
+    inserted.forEach((dbRow, index)=>{
+        rows[index]._id = dbRow.id;
     });
-  }
 
-  await loadOrders();
+    // one import log per order (temporary)
+    for(const row of rows){
 
-  showToast(
-    `${inserted.length} orders imported`
-  );
+        await addLog({
+            orderId: row._id,
+            action:"IMPORT"
+        });
+    }
+
+    await loadOrders();
+    showToast(`${rows.length} orders imported`);
 }
 
 async function addBulkLogs(logs){
