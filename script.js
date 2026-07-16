@@ -1,138 +1,153 @@
 console.log("SCRIPT STARTED");
 
 const SUPABASE_URL = "https://adcjrkudofddvmcpmdzw.supabase.co";
-const SUPABASE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkY2pya3Vkb2ZkZHZtY3BtZHp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMzNTk5MjAsImV4cCI6MjA5ODkzNTkyMH0.PBRsj25fzx6nz9fdDQb47pLQvJ5xPzQ74tcHPdcfDLI";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkY2pya3Vkb2ZkZHZtY3BtZHp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMzNTk5MjAsImV4cCI6MjA5ODkzNTkyMH0.PBRsj25fzx6nz9fdDQb47pLQvJ5xPzQ74tcHPdcfDLI";
 
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 async function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
 
-  const { error } = await supabaseClient.auth.signInWithPassword({
-    email,
-    password
-  });
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-  if (error) {
-    document.getElementById("loginError").innerText = error.message;
-    return;
-  }
+    const { error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+    });
 
-  await showApp();
+    if (error) {
+        document.getElementById("loginError").innerText = error.message;
+        return;
+    }
+
+    await showApp();
 }
 
 async function checkLogin() {
-  const { data } = await supabaseClient.auth.getSession();
 
-  if (data.session) {
-    showApp();
-  } else {
-    document.getElementById("loginBox").style.display = "block";
-    document.getElementById("app").style.display = "none";
-  }
+    const { data } = await supabaseClient.auth.getSession();
+
+    if (data.session) {
+
+        showApp();
+
+    } else {
+
+        document.getElementById("loginBox").style.display = "block";
+        document.getElementById("app").style.display = "none";
+
+    }
 }
 
-async function logout() {
+async function logout(){
+
   const { error } = await supabaseClient.auth.signOut();
 
-  if (error) {
+  if(error){
     console.error("Logout failed:", error);
     return;
   }
 
   document.getElementById("loginBox").style.display = "block";
   document.getElementById("app").style.display = "none";
+
 }
 
 async function showApp() {
-  document.getElementById("loginBox").style.display = "none";
-  document.getElementById("app").style.display = "block";
 
-  await loadOrders();
-  showOrders();
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("app").style.display = "block";
 
-  startRealtime();
+    await loadOrders();
+    showOrders();
+
+    startRealtime();
 }
 
 let data = [];
 
-async function loadOrders() {
-  const { data: rows, error } = await supabaseClient
-    .from("orders")
-    .select("*")
-    .order("created_at");
+async function loadOrders(){
 
-  if (error) {
+  const { data: rows, error } =
+    await supabaseClient
+      .from("orders")
+      .select("*")
+      .order("created_at");
+
+  if(error){
     console.error(error);
     return;
   }
 
-  data = rows.map((row) => ({
-    _id: row.id,
+  data = rows.map(row => ({
+  _id: row.id,
 
-    "DShipper ID": row.dshipper_id || "",
-    "Tr.Orig.No.": row.tr_orig_no || "",
-    "Cust. PO No.": row.cust_po_no || "",
+  "DShipper ID": row.dshipper_id || "",
+  "Tr.Orig.No.": row.tr_orig_no || "",
+  "Cust. PO No.": row.cust_po_no || "",
 
-    "Item ID 1": row.item_id_1 || "",
-    "Qty 1": row.qty_1 || "",
-    "Price 1": row.price_1 || "",
+  "Item ID 1": row.item_id_1 || "",
+  "Qty 1": row.qty_1 || "",
+  "Price 1": row.price_1 || "",
 
-    "Item ID 2": row.item_id_2 || "",
-    "Qty 2": row.qty_2 || "",
-    "Price 2": row.price_2 || "",
+  "Item ID 2": row.item_id_2 || "",
+  "Qty 2": row.qty_2 || "",
+  "Price 2": row.price_2 || "",
 
-    "Item ID 3": row.item_id_3 || "",
-    "Qty 3": row.qty_3 || "",
-    "Price 3": row.price_3 || "",
+  "Item ID 3": row.item_id_3 || "",
+  "Qty 3": row.qty_3 || "",
+  "Price 3": row.price_3 || "",
 
-    "Item ID 4": row.item_id_4 || "",
-    "Qty 4": row.qty_4 || "",
-    "Price 4": row.price_4 || "",
+  "Item ID 4": row.item_id_4 || "",
+  "Qty 4": row.qty_4 || "",
+  "Price 4": row.price_4 || "",
 
-    "Item ID 5": row.item_id_5 || "",
-    "Qty 5": row.qty_5 || "",
-    "Price 5": row.price_5 || "",
+  "Item ID 5": row.item_id_5 || "",
+  "Qty 5": row.qty_5 || "",
+  "Price 5": row.price_5 || "",
 
-    "Ship Name": cleanText(row.ship_name) || "",
-    "Ship Addr1": cleanText(row.ship_addr1) || "",
-    "Ship Addr2": row.ship_addr2 || "",
-    "Ship City": row.ship_city || "",
-    "Ship State": row.ship_state || "",
-    "Ship Zip": row.ship_zip || "",
-    "Ship Country": row.ship_country || "",
-    "Ship Phone": row.ship_phone || "",
-    "Ship Email": row.ship_email || "",
-    "Ship Service": row.ship_service || "",
-    "Ship Ins.": row.ship_ins || "",
-    "Ship COD": row.ship_cod || "",
-    "Ship Confirm.": row.ship_confirm || "",
-    "Ship From": row.ship_from || "",
-    "Ship Acct": row.ship_acct || "",
+  "Ship Name": cleanText(row.ship_name) || "",
+  "Ship Addr1": cleanText(row.ship_addr1) || "",
+  "Ship Addr2": row.ship_addr2 || "",
+  "Ship City": row.ship_city || "",
+  "Ship State": row.ship_state || "",
+  "Ship Zip": row.ship_zip || "",
+  "Ship Country": row.ship_country || "",
+  "Ship Phone": row.ship_phone || "",
+  "Ship Email": row.ship_email || "",
+  "Ship Service": row.ship_service || "",
+  "Ship Ins.": row.ship_ins || "",
+  "Ship COD": row.ship_cod || "",
+  "Ship Confirm.": row.ship_confirm || "",
+  "Ship From": row.ship_from || "",
+  "Ship Acct": row.ship_acct || "",
 
-    _notes: row.notes || "",
+  _notes: row.notes || "",
 
-    _meta: {
-      updatedAt: row.updated_at
-    }
-  }));
+  _meta: {
+    updatedAt: row.updated_at
+  }
+}));
 
   updateDashboard();
   renderTable();
 }
 
 async function insertOrder(row) {
+
   const dbRow = mapRowToDB(row);
 
-  const { data: inserted, error } = await supabaseClient
-    .from("orders")
-    .insert(dbRow)
-    .select()
-    .single();
+  const { data: inserted, error } =
+    await supabaseClient
+      .from("orders")
+      .insert(dbRow)
+      .select()
+      .single();
 
-  if (error) {
+  if(error){
     console.error("Insert failed:", error);
     return null;
   }
@@ -149,40 +164,39 @@ async function addLog({
   oldValue = null,
   newValue = null
 }) {
-  const {
-    data: userData,
-    error: userError
-  } = await supabaseClient.auth.getUser();
 
-  const user = userData.user;
+  const { data: userData, error: userError } =
+    await supabaseClient.auth.getUser();
+
+    const user = userData.user;
 
   if (!user) {
     console.warn("No logged in user, cannot create log");
     return;
   }
-
+  
   const { data, error } = await supabaseClient
     .from("order_logs")
     .insert({
-      order_id: orderId,
-      user_id: user.id,
-      user_name: user.user_metadata.full_name || user.email,
-      user_email: user.email,
-      action,
-      field_name: fieldName,
-      old_value: oldValue,
-      new_value: newValue
-    })
+  order_id: orderId,
+  user_id: user.id,
+  user_name: user.user_metadata.full_name || user.email,
+  user_email: user.email,
+  action,
+  field_name: fieldName,
+  old_value: oldValue,
+  new_value: newValue
+})
     .select();
 
   if (error) {
     console.error("Log failed:", error);
-  } else {
+} else {
     console.log("Log inserted successfully");
-  }
+}
 }
 
-function mapRowToDB(row, updateTimestamp = true) {
+function mapRowToDB(row) {
   return {
     dshipper_id: row["DShipper ID"] || "",
     tr_orig_no: row["Tr.Orig.No."] || "",
@@ -225,16 +239,13 @@ function mapRowToDB(row, updateTimestamp = true) {
     ship_acct: row["Ship Acct"] || "",
 
     notes: row._notes || "",
-
-    ...(updateTimestamp && {
-      updated_at: new Date().toISOString()
-    })
+    updated_at: new Date().toISOString()
   };
 }
 
-async function updateOrder(row, updateTimestamp = true) {
+async function updateOrder(row){
 
-  const dbRow = mapRowToDB(row, updateTimestamp);
+  const dbRow = mapRowToDB(row);
 
   const { error } =
     await supabaseClient
@@ -242,15 +253,20 @@ async function updateOrder(row, updateTimestamp = true) {
       .update(dbRow)
       .eq("id", row._id);
 
-  if (error) {
+  if(error){
     console.error("Update failed:", error);
   }
 }
 
-async function deleteOrderFromDB(id) {
-  const { error } = await supabaseClient.from("orders").delete().eq("id", id);
+async function deleteOrderFromDB(id){
 
-  if (error) {
+  const { error } =
+    await supabaseClient
+      .from("orders")
+      .delete()
+      .eq("id", id);
+
+  if(error){
     console.error("Delete failed:", error);
   }
 }
@@ -259,8 +275,9 @@ let searchQuery = "";
 let undoStack = [];
 let redoStack = [];
 let notesSortAsc = true;
-let realtimeChannel = null;
-let sortMode = "default";
+let sortByUpdated = false;
+let sortAsc = false;
+let realtimeChannel = null; 
 
 // Columns definition
 const columns = [
@@ -322,50 +339,53 @@ let debounceTimeout;
 
 // ======= Initialization =======
 document.addEventListener("DOMContentLoaded", async () => {
+
   document.getElementById("closeProfile").onclick = () => {
-    document.getElementById("profileModal").style.display = "none";
-  };
+  document.getElementById("profileModal").style.display = "none";
+};
 
   document.getElementById("closeHistory").onclick = () => {
     document.getElementById("historyModal").style.display = "none";
-  };
+};
 
   document.getElementById("closeReadme").onclick = () => {
     document.getElementById("readmeModal").style.display = "none";
-  };
+};
 
-  window.addEventListener("click", (e) => {
+window.addEventListener("click", e => {
     const modal = document.getElementById("historyModal");
 
-    if (e.target === modal) modal.style.display = "none";
-  });
+    if(e.target === modal)
+        modal.style.display = "none";
+});
 
   document.getElementById("loginBox").addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-      login();
+        login();
     }
-  });
+});
 
   dealerSelect = document.getElementById("dealerSelect");
 
-  if (dealerSelect) dealerSelect.addEventListener("change", renderTable);
+  if (dealerSelect)
+    dealerSelect.addEventListener("change", renderTable);
 
   const searchBox = document.getElementById("searchBox");
 
-  if (searchBox) {
-    searchBox.addEventListener("input", (e) => {
+  if(searchBox){
+    searchBox.addEventListener("input",(e)=>{
       clearTimeout(debounceTimeout);
 
-      debounceTimeout = setTimeout(() => {
-        searchQuery = e.target.value.toLowerCase();
+      debounceTimeout=setTimeout(()=>{
+        searchQuery=e.target.value.toLowerCase();
         renderTable();
-      }, 150);
+      },150);
     });
   }
 
   renderHeaders();
 
-  await checkLogin();
+  await checkLogin(); 
 });
 
 // ======= Utility Functions =======
@@ -414,21 +434,9 @@ function renderHeaders() {
     columns.map((col) => `<th>${col}</th>`).join("") +
     `<th id="updatedHeader" style="cursor:pointer;">Updated</th>`;
   document.getElementById("updatedHeader").addEventListener("click", () => {
-    switch (sortMode) {
-      case "default":
-        sortMode = "updated-desc";
-        break;
-
-      case "updated-desc":
-        sortMode = "updated-asc";
-        break;
-
-      default:
-        sortMode = "default";
-        break;
-    }
-
-    renderTable();
+    sortByUpdated = true;
+    sortAsc = !sortAsc; // toggle asc/desc
+    loadOrders();
   });
 }
 
@@ -460,9 +468,9 @@ function renderTable() {
         !searchQuery ||
         columns.some((col) =>
           String(row[col] || "")
-            .toLowerCase()
-            .includes(searchQuery)
-        );
+      .toLowerCase()
+      .includes(searchQuery)
+    );
 
       const id = (row["DShipper ID"] || "").trim().toUpperCase();
 
@@ -474,31 +482,18 @@ function renderTable() {
         selectedDealer === "all" ||
         (dealerMap[selectedDealer] &&
           id === dealerMap[selectedDealer].toUpperCase()) ||
-        (selectedDealer === "others" && !knownDealers.includes(id));
+        (selectedDealer === "others" && !knownDealers.includes(id)); 
 
       return matchSearch && matchDealer;
     });
 
-  switch (sortMode) {
-    case "updated-desc":
-      filteredData.sort((a, b) => {
-        const timeA = new Date(a.row._meta?.updatedAt || 0).getTime();
-        const timeB = new Date(b.row._meta?.updatedAt || 0).getTime();
-        return timeB - timeA;
-      });
-      break;
+  if (sortByUpdated) {
+    filteredData.sort((a, b) => {
+      const timeA = new Date(a.row._meta?.updatedAt || 0).getTime();
+      const timeB = new Date(b.row._meta?.updatedAt || 0).getTime();
 
-    case "updated-asc":
-      filteredData.sort((a, b) => {
-        const timeA = new Date(a.row._meta?.updatedAt || 0).getTime();
-        const timeB = new Date(b.row._meta?.updatedAt || 0).getTime();
-        return timeA - timeB;
-      });
-      break;
-
-    default:
-      // Keep the original order (created_at)
-      break;
+      return sortAsc ? timeA - timeB : timeB - timeA;
+    });
   }
 
   filteredData.forEach(({ row, index }, rowIndex) => {
@@ -521,50 +516,55 @@ function renderTable() {
     // Actions column
     const actionTd = document.createElement("td");
 
-    const actionBox = document.createElement("div");
-    actionBox.className = "action-box";
+const actionBox = document.createElement("div");
+actionBox.className = "action-box";
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = !!row._marked;
 
-    checkbox.addEventListener("change", () => {
-      row._marked = checkbox.checked;
-    });
+const checkbox = document.createElement("input");
+checkbox.type = "checkbox";
+checkbox.checked = !!row._marked;
 
-    actionBox.appendChild(checkbox);
+checkbox.addEventListener("change", () => {
+  row._marked = checkbox.checked;
+});
 
-    const copyBtn = document.createElement("button");
-    copyBtn.className = "copy-btn";
-    copyBtn.title = "Copy";
+actionBox.appendChild(checkbox);
 
-    copyBtn.addEventListener("click", () => copyRow(row._id));
 
-    actionBox.appendChild(copyBtn);
+const copyBtn = document.createElement("button");
+copyBtn.className = "copy-btn";
+copyBtn.title = "Copy";
 
-    const historyBtn = document.createElement("button");
-    historyBtn.textContent = "📜";
-    historyBtn.title = "View History";
+copyBtn.addEventListener("click", () => copyRow(row._id));
 
-    historyBtn.addEventListener("click", () => {
-      showHistory(row._id);
-    });
+actionBox.appendChild(copyBtn);
 
-    actionBox.appendChild(historyBtn);
 
-    const deleteBtn = document.createElement("button");
-    deleteBtn.className = "delete-btn";
-    deleteBtn.textContent = "🗑️";
-    deleteBtn.title = "Delete";
+const historyBtn = document.createElement("button");
+historyBtn.textContent = "📜";
+historyBtn.title = "View History";
 
-    deleteBtn.addEventListener("click", () => deleteRow(row._id));
+historyBtn.addEventListener("click", () => {
+  showHistory(row._id);
+});
 
-    actionBox.appendChild(deleteBtn);
+actionBox.appendChild(historyBtn);
 
-    actionTd.appendChild(actionBox);
 
-    tr.appendChild(actionTd);
+const deleteBtn = document.createElement("button");
+deleteBtn.className = "delete-btn";
+deleteBtn.textContent = "🗑️";
+deleteBtn.title = "Delete";
 
+deleteBtn.addEventListener("click", () => deleteRow(row._id));
+
+actionBox.appendChild(deleteBtn);
+
+
+actionTd.appendChild(actionBox);
+
+tr.appendChild(actionTd);
+    
     // Notes column
     const notesTd = document.createElement("td");
     notesTd.classList.add("notes");
@@ -582,38 +582,39 @@ function renderTable() {
 
     // save on blur
     textSpan.addEventListener("blur", async () => {
-      if (textSpan.dataset.dropdownOpen === "1") {
-        delete textSpan.dataset.dropdownOpen;
-        return;
-      }
-      if (textSpan.dataset.before !== textSpan.innerText) {
-        const oldValue = textSpan.dataset.before;
-        const newValue = textSpan.innerText;
 
-        addUndoAction({
-          action: "UPDATE",
-          orderId: row._id,
-          field: "_notes",
-          oldValue,
-          newValue
-        });
+  if (textSpan.dataset.before !== textSpan.innerText) {
 
-        row._notes = newValue;
-        const cls = getNoteClass(newValue);
-        notesTd.className = cls ? `notes ${cls}` : "notes";
+    const oldValue = textSpan.dataset.before;
+    const newValue = textSpan.innerText;
 
-        await addLog({
-          orderId: row._id,
-          action: "UPDATE",
-          fieldName: "Notes",
-          oldValue,
-          newValue
-        });
-
-        await updateOrder(row, false);
-      }
+    addUndoAction({
+      action: "UPDATE",
+      orderId: row._id,
+      field: "_notes",
+      oldValue,
+      newValue
     });
 
+    row._notes = newValue;
+    const cls = getNoteClass(newValue);
+    notesTd.className = cls ? `notes ${cls}` : "notes";
+    
+    row._meta = row._meta || {};
+    row._meta.updatedAt = new Date().toISOString();
+
+    await addLog({
+      orderId: row._id,
+      action: "UPDATE",
+      fieldName: "Notes",
+      oldValue,
+      newValue
+    });
+
+    await updateOrder(row);
+  }
+});
+    
     notesTd.appendChild(textSpan);
 
     // Dropdown button inside cell
@@ -625,7 +626,6 @@ function renderTable() {
     notesTd.appendChild(dropdownBtn);
 
     dropdownBtn.addEventListener("click", (e) => {
-      e.preventDefault();
       e.stopPropagation(); // prevent focus issues
 
       const select = document.createElement("select");
@@ -659,38 +659,40 @@ function renderTable() {
         const oldValue = row._notes || "";
         const newValue = select.value;
 
-        addUndoAction({
-          action: "UPDATE",
-          orderId: row._id,
-          field: "_notes",
-          oldValue,
-          newValue
-        });
+      addUndoAction({
+        action: "UPDATE",
+        orderId: row._id,
+        field: "_notes",
+        oldValue,
+        newValue
+      });
 
-        row._notes = newValue;
-        textSpan.innerText = newValue;
+row._notes = newValue;
 
-        const cls = getNoteClass(newValue);
-        notesTd.className = cls ? `notes ${cls}` : "notes";
+row._meta = row._meta || {};
+row._meta.updatedAt = new Date().toISOString();
 
-        await addLog({
-          orderId: row._id,
-          action: "UPDATE",
-          fieldName: "Notes",
-          oldValue,
-          newValue
-        });
+const cls = getNoteClass(newValue);
+notesTd.className = cls ? `notes ${cls}` : "notes";
 
-        await updateOrder(row, false);
+await addLog({
+  orderId: row._id,
+  action: "UPDATE",
+  fieldName: "Notes",
+  oldValue,
+  newValue
+});
 
+await updateOrder(row);
+
+safeRemove(select);
+});
+
+  select.addEventListener("blur", () => {
+    setTimeout(() => {
         safeRemove(select);
-      });
-
-      select.addEventListener("blur", () => {
-        setTimeout(() => {
-          safeRemove(select);
-        }, 100);
-      });
+    }, 100);
+});
     });
 
     tr.appendChild(notesTd);
@@ -713,41 +715,44 @@ function renderTable() {
       td.addEventListener("focus", () => {
         td.dataset.before = td.innerText;
       });
-
+      
       td.addEventListener("blur", async () => {
         console.log("CELL BLUR", col);
+        
+  if (td.dataset.before !== td.innerText) {
 
-        if (td.dataset.before !== td.innerText) {
-          const id = td.dataset.id;
-          const rowIndex = findRowIndexById(id);
+    const id = td.dataset.id;
+    const rowIndex = findRowIndexById(id);
 
-          if (rowIndex !== -1) {
-            const oldValue = td.dataset.before;
-            const newValue = td.innerText;
+    if (rowIndex !== -1) {
 
-            addUndoAction({
-              action: "UPDATE",
-              orderId: data[rowIndex]._id,
-              field: col,
-              oldValue,
-              newValue
-            });
-            data[rowIndex][col] = newValue;
+      const oldValue = td.dataset.before;
+      const newValue = td.innerText;
 
-            data[rowIndex]._meta = data[rowIndex]._meta || {};
-            data[rowIndex]._meta.updatedAt = new Date().toISOString();
+      addUndoAction({
+    action:"UPDATE",
+    orderId:data[rowIndex]._id,
+    field:col,
+    oldValue,
+    newValue
+});
+      data[rowIndex][col] = newValue;
 
-            await addLog({
-              orderId: data[rowIndex]._id,
-              action: "UPDATE",
-              fieldName: col,
-              oldValue,
-              newValue
-            });
-            await updateOrder(row);
-          }
-        }
+      data[rowIndex]._meta = data[rowIndex]._meta || {};
+      data[rowIndex]._meta.updatedAt = new Date().toISOString();
+
+
+      await addLog({
+        orderId: data[rowIndex]._id,
+        action: "UPDATE",
+        fieldName: col,
+        oldValue,
+        newValue
       });
+      await updateOrder(data[rowIndex]);
+    }
+  }
+});
       td.addEventListener("keydown", handleNavigation);
       tr.appendChild(td);
     });
@@ -760,31 +765,33 @@ function renderTable() {
   });
 
   tbody.appendChild(fragment);
-}
+} 
 
-async function showHistory(orderId) {
+async function showHistory(orderId){
+
   const { data: logs, error } = await supabaseClient
     .from("order_logs")
     .select("*")
     .eq("order_id", orderId)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending:false });
 
-  if (error) {
+  if(error){
     console.error(error);
     showToast("Failed to load history");
     return;
   }
 
-  if (!logs.length) {
+  if(!logs.length){
     alert("No history found");
     return;
   }
 
   const body = document.getElementById("historyBody");
 
-  body.innerHTML = "";
+body.innerHTML = "";
 
-  logs.forEach((log) => {
+logs.forEach(log => {
+
     const div = document.createElement("div");
 
     div.className = "history-entry";
@@ -803,20 +810,23 @@ async function showHistory(orderId) {
         </div>
 
         ${
-          log.field_name
-            ? `<div class="history-change">
+            log.field_name
+            ?
+            `<div class="history-change">
                 <b>${log.field_name}</b><br>
                 ${log.old_value || ""} → ${log.new_value || ""}
             </div>`
-            : ""
+            :
+            ""
         }
 
     `;
 
     body.appendChild(div);
-  });
 
-  document.getElementById("historyModal").style.display = "block";
+});
+
+document.getElementById("historyModal").style.display = "block";
 }
 
 function safeRemove(el) {
@@ -840,55 +850,60 @@ function createEmptyRow() {
 
 // ======= Row Operations =======
 async function addRow() {
-  saveState();
+    saveState();
 
-  const newRow = createEmptyRow();
+    const newRow = createEmptyRow();
 
-  const selectedDealer = dealerSelect ? dealerSelect.value : "all";
-  if (selectedDealer !== "all") {
-    newRow["DShipper ID"] = dealerMap[selectedDealer];
-  }
+    const selectedDealer = dealerSelect ? dealerSelect.value : "all";
+    if (selectedDealer !== "all") {
+        newRow["DShipper ID"] = dealerMap[selectedDealer];
+    }
 
-  const inserted = await insertOrder(newRow);
+    const inserted = await insertOrder(newRow);
 
-  if (!inserted) {
+if (!inserted) {
     showToast("Failed to create order");
     return;
-  }
+}
 
-  await addLog({
+await addLog({
     orderId: inserted.id,
     action: "CREATE"
-  });
+});
 
-  await loadOrders();
+await loadOrders();
 }
 
 async function deleteRow(id) {
-  if (!confirm("Delete this order?")) return;
 
-  const row = data.find((r) => r._id === id);
-  if (!row) return;
+    if (!confirm("Delete this order?"))
+        return;
+    
+    const row = data.find(r => r._id === id);
+    if(!row)
+        return;
 
-  // Save delete action for undo
-  undoStack.push({
-    action: "DELETE",
-    orderId: id,
-    oldData: structuredClone(row)
-  });
+    // Save delete action for undo
+    undoStack.push({
+        action:"DELETE",
+        orderId:id,
+        oldData: structuredClone(row)
+    });
 
-  redoStack = [];
+    redoStack = [];
 
-  await addLog({
-    orderId: id,
-    action: "DELETE"
-  });
+    await addLog({
+        orderId: id,
+        action:"DELETE"
+    });
+ 
+    data = data.filter(
+        r => r._id !== id
+    );
 
-  data = data.filter((r) => r._id !== id);
-
-  await deleteOrderFromDB(id);
-  await loadOrders();
-  updateUndoButtons();
+    await deleteOrderFromDB(id);
+    await loadOrders();
+    updateUndoButtons();
 }
 
 function copyRow(id) {
@@ -915,52 +930,60 @@ function copyRow(id) {
 }
 
 async function deleteMarkedRows() {
-  const marked = data.filter((r) => r._marked);
 
-  if (!marked.length) {
-    showToast("No rows selected");
-    return;
-  }
+    const marked = data.filter(r => r._marked);
 
-  if (!confirm(`Delete ${marked.length} selected order(s)?`)) return;
+    if (!marked.length) {
+        showToast("No rows selected");
+        return;
+    }
 
-  // Save one undo action
-  addUndoAction({
-    action: "BULK_DELETE",
-    rows: marked.map((row) => structuredClone(row))
-  });
+    if (!confirm(`Delete ${marked.length} selected order(s)?`))
+        return;
 
-  // Create history logs
-  for (const row of marked) {
-    await addLog({
-      orderId: row._id,
-      action: "DELETE"
+    // Save one undo action
+    addUndoAction({
+        action: "BULK_DELETE",
+        rows: marked.map(row => structuredClone(row))
     });
-  }
 
-  // Delete from database
-  const ids = marked.map((row) => row._id);
+    // Create history logs
+    for (const row of marked) {
 
-  const success = await deleteOrdersFromDB(ids);
-  if (!success) {
-    showToast("Delete failed");
-    return;
-  }
+        await addLog({
+            orderId: row._id,
+            action: "DELETE"
+        });
+    }
 
-  // Refresh table
-  await loadOrders();
-  showToast(`${marked.length} orders deleted`);
+    // Delete from database
+    const ids = marked.map(row => row._id);
+
+    const success = await deleteOrdersFromDB(ids);
+      if(!success){
+        showToast("Delete failed");
+        return;
+      }
+
+    // Refresh table
+    await loadOrders();
+    showToast(`${marked.length} orders deleted`);
 }
 
-async function deleteOrdersFromDB(ids) {
-  const { error } = await supabaseClient.from("orders").delete().in("id", ids);
+async function deleteOrdersFromDB(ids){
 
-  if (error) {
-    console.error(error);
-    return false;
-  }
+    const { error } =
+        await supabaseClient
+            .from("orders")
+            .delete()
+            .in("id", ids);
 
-  return true;
+    if(error){
+        console.error(error);
+        return false;
+    }
+
+    return true;
 }
 
 function copyMarkedRows() {
@@ -972,16 +995,16 @@ function copyMarkedRows() {
   }
 
   const text = marked
-    .map((r) =>
-      columns
-        .map((c) =>
-          String(r[c] || "")
-            .replace(/\r?\n/g, " ")
-            .trim()
-        )
-        .join("\t")
-    )
-    .join("\n");
+  .map((r) =>
+    columns
+      .map((c) =>
+        String(r[c] || "")
+          .replace(/\r?\n/g, " ")
+          .trim()
+      )
+      .join("\t")
+  )
+  .join("\n");
 
   navigator.clipboard
     .writeText(text)
@@ -993,10 +1016,10 @@ function copyMarkedRows() {
     });
 }
 
-function cleanText(value) {
-  return String(value || "")
-    .replace(/\r?\n/g, " ")
-    .trim();
+function cleanText(value){
+    return String(value || "")
+        .replace(/\r?\n/g," ")
+        .trim();
 }
 
 function showToast(msg) {
@@ -1026,130 +1049,144 @@ function showToast(msg) {
 }
 
 // ======= Undo / Redo =======
-async function undo() {
-  const action = undoStack.pop();
-  console.log("UNDO ACTION:", action);
-  if (!action) {
-    showToast("Nothing to undo");
-    return;
-  }
+async function undo(){
 
-  if (action.action === "BULK_DELETE") {
-    for (const oldRow of action.rows) {
-      const restoreRow = structuredClone(oldRow);
-      delete restoreRow._id;
-      delete restoreRow._meta;
-      const inserted = await insertOrder(restoreRow);
+    const action = undoStack.pop();
+    console.log("UNDO ACTION:", action);
+    if(!action){
+        showToast("Nothing to undo");
+        return;
+    }
 
-      if (inserted) {
-        await addLog({
-          orderId: inserted.id,
-          action: "RESTORE"
-        });
-      }
+    if (action.action === "BULK_DELETE") {
+      for (const oldRow of action.rows) {
+
+        const restoreRow = structuredClone(oldRow);
+        delete restoreRow._id;
+        delete restoreRow._meta;
+        const inserted = await insertOrder(restoreRow);
+
+        if (inserted) {
+            await addLog({
+                orderId: inserted.id,
+                action: "RESTORE"
+            });
+        }
     }
 
     await loadOrders();
     showToast(`${action.rows.length} orders restored`);
     updateUndoButtons();
     return;
-  }
-
-  if (action.action === "DELETE") {
-    const restoreRow = structuredClone(action.oldData);
-    delete restoreRow._id;
-    delete restoreRow._meta;
-
-    console.log("RESTORING:", restoreRow);
-    const inserted = await insertOrder(restoreRow);
-
-    console.log("INSERT RESULT:", inserted);
-
-    if (inserted) {
-      redoStack.push({
-        ...action,
-        orderId: inserted.id
-      });
-
-      await addLog({
-        orderId: inserted.id,
-        action: "RESTORE"
-      });
-      await loadOrders();
-      updateUndoButtons();
-      showToast("Order restored");
-    }
-    return;
-  }
-
-  // Normal field undo
-  const row = data.find((r) => r._id === action.orderId);
-  if (!row) {
-    showToast("Order no longer exists");
-    return;
-  }
-
-  redoStack.push(action);
-  row[action.field] = action.oldValue;
-
-  await updateOrder(row);
-  await loadOrders();
-  showToast("Undo completed");
-  updateUndoButtons();
 }
 
-async function redo() {
-  const action = redoStack.pop();
-  if (!action) {
-    showToast("Nothing to redo");
-    return;
-  }
+    if(action.action === "DELETE"){
 
-  if (action.action === "DELETE") {
-    await deleteOrderFromDB(action.orderId);
-    await addLog({
-      orderId: action.orderId,
-      action: "DELETE"
-    });
+        const restoreRow = structuredClone(action.oldData);
+        delete restoreRow._id;
+        delete restoreRow._meta;
+
+        console.log("RESTORING:", restoreRow);
+        const inserted =
+            await insertOrder(restoreRow);
+
+        console.log("INSERT RESULT:", inserted);
+
+        if(inserted){
+            redoStack.push({
+                ...action,
+                orderId: inserted.id
+            });
+
+            await addLog({
+                orderId: inserted.id,
+                action:"RESTORE"
+            });
+            await loadOrders();
+            updateUndoButtons();
+            showToast("Order restored");
+        }
+        return;
+    }
+
+    // Normal field undo
+    const row = data.find(
+        r => r._id === action.orderId
+    );
+    if(!row){
+        showToast("Order no longer exists");
+        return;
+    }
+
+    redoStack.push(action);
+    row[action.field] = action.oldValue;
+
+    await updateOrder(row);
+    await loadOrders();
+    showToast("Undo completed");
+    updateUndoButtons();
+}
+
+async function redo(){
+
+    const action = redoStack.pop();
+    if(!action){
+        showToast("Nothing to redo");
+        return;
+    }
+
+    if(action.action === "DELETE"){
+
+        await deleteOrderFromDB(action.orderId);
+        await addLog({
+            orderId: action.orderId,
+            action:"DELETE"
+        });
+
+        undoStack.push(action);
+        await loadOrders();
+        updateUndoButtons();
+        showToast("Order deleted again");
+        return;
+    }
+    const row = data.find(
+        r => r._id === action.orderId
+    );
+    if(!row){
+        return;
+    }
 
     undoStack.push(action);
+    row[action.field] = action.newValue;
+
+    await updateOrder(row);
     await loadOrders();
+    showToast("Redo completed");
     updateUndoButtons();
-    showToast("Order deleted again");
-    return;
-  }
-  const row = data.find((r) => r._id === action.orderId);
-  if (!row) {
-    return;
-  }
-
-  undoStack.push(action);
-  row[action.field] = action.newValue;
-
-  await updateOrder(row);
-  await loadOrders();
-  showToast("Redo completed");
-  updateUndoButtons();
 }
 
-function addUndoAction(action) {
-  undoStack.push(action);
+function addUndoAction(action){
 
-  if (undoStack.length > 100) {
-    undoStack.shift();
-  }
+    undoStack.push(action);
 
-  redoStack = [];
-  updateUndoButtons();
+    if(undoStack.length > 100){
+        undoStack.shift();
+    }
+
+    redoStack = [];
+    updateUndoButtons(); 
 }
 
-function updateUndoButtons() {
-  const undoBtn = document.getElementById("undoBtn");
-  const redoBtn = document.getElementById("redoBtn");
+function updateUndoButtons(){
 
-  if (undoBtn) undoBtn.disabled = undoStack.length === 0;
+    const undoBtn = document.getElementById("undoBtn");
+    const redoBtn = document.getElementById("redoBtn");
 
-  if (redoBtn) redoBtn.disabled = redoStack.length === 0;
+    if(undoBtn)
+        undoBtn.disabled = undoStack.length === 0;
+
+    if(redoBtn)
+        redoBtn.disabled = redoStack.length === 0;
 }
 
 function findRowIndexById(id) {
@@ -1222,40 +1259,41 @@ document.addEventListener("paste", async (e) => {
   if (startIndex === -1 || isNaN(startCol)) return;
 
   saveState();
-
+  
   const changedRows = new Set();
 
-  for (const [rIndex, r] of rows.entries()) {
+for (const [rIndex, r] of rows.entries()) {
+
     const targetIndex = startIndex + rIndex;
 
     if (targetIndex >= data.length) {
-      const newRow = createEmptyRow();
-      data.push(newRow);
-      await insertOrder(newRow);
+        const newRow = createEmptyRow();
+        data.push(newRow);
+        await insertOrder(newRow);
     }
 
     const row = data[targetIndex];
 
     r.forEach((val, cIndex) => {
-      const colIndex = startCol + cIndex;
+        const colIndex = startCol + cIndex;
 
-      if (colIndex < columns.length) {
-        row[columns[colIndex]] = val;
-      }
+        if (colIndex < columns.length) {
+            row[columns[colIndex]] = val;
+        }
     });
 
     row._meta = row._meta || {};
     row._meta.updatedAt = new Date().toISOString();
 
     changedRows.add(row);
-  }
+}
 
-  for (const row of changedRows) {
+for (const row of changedRows) {
     await updateOrder(row);
-  }
+}
 
-  await loadOrders();
-});
+await loadOrders();
+  }); 
 
 // ======= Export / Import =======
 function exportCSV(marked = false) {
@@ -1265,15 +1303,22 @@ function exportCSV(marked = false) {
     return;
   }
 
-  const exportColumns = ["Notes", ...columns];
+  const exportColumns = [
+    "Notes",
+    ...columns
+];
 
-  const wsData = [
+const wsData = [
     exportColumns,
-    ...exportData.map((r) =>
-      exportColumns.map((c) => (c === "Notes" ? r._notes || "" : r[c] || ""))
+    ...exportData.map(r =>
+        exportColumns.map(c =>
+            c === "Notes"
+            ? r._notes || ""
+            : r[c] || ""
+        )
     )
-  ];
-
+];
+  
   const ws = XLSX.utils.aoa_to_sheet(wsData);
   ws["!views"] = [{ state: "frozen", ySplit: 1 }];
   ws["!cols"] = columns.map((col) => {
@@ -1288,131 +1333,150 @@ function exportCSV(marked = false) {
   XLSX.writeFile(wb, marked ? "Marked_Backorders.xlsx" : "Backorders.xlsx");
 }
 
-function importExcel() {
+function importExcel(){
+
   const input = document.getElementById("excelInput");
   input.value = "";
   input.click();
 
   input.onchange = async () => {
     const file = input.files[0];
-    if (!file) return;
+    if(!file)
+      return;
 
     await processExcel(file);
   };
 }
 
-async function processExcel(file) {
+async function processExcel(file){
+  
   const buffer = await file.arrayBuffer();
   const workbook = XLSX.read(buffer);
-  const sheet = workbook.Sheets[workbook.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(sheet, {
-    header: 1
-  });
+  const sheet =
+    workbook.Sheets[workbook.SheetNames[0]];
+  const rows =
+    XLSX.utils.sheet_to_json(sheet, {
+      header:1
+    });
 
-  if (rows.length < 2) {
+  if(rows.length < 2){
     showToast("No data found");
     return;
   }
   const headers = rows[0];
-  const importedRows = rows.slice(1).map((row) => {
-    const newRow = createEmptyRow();
+  const importedRows = rows
+    .slice(1)
+    .map(row => {
+      const newRow = createEmptyRow();
 
-    headers.forEach((header, index) => {
-      if (columns.includes(header)) {
-        newRow[header] = row[index] ?? "";
-      }
+      headers.forEach((header,index)=>{
+        if(columns.includes(header)){
+          newRow[header] = row[index] ?? "";
+    }
 
-      if (header === "Notes") {
-        newRow._notes = row[index] ?? "";
-      }
+        if(header === "Notes"){
+          newRow._notes = row[index] ?? "";
+        }
     });
-    return newRow;
-  });
+      return newRow;
+    });
 
   await insertImportedOrders(importedRows);
 }
 
-async function insertImportedOrders(rows) {
-  const dbRows = rows.map(mapRowToDB);
+async function insertImportedOrders(rows){
 
-  const { data: inserted, error } = await supabaseClient
-    .from("orders")
-    .insert(dbRows)
-    .select();
+    const dbRows = rows.map(mapRowToDB);
 
-  if (error) {
-    console.error(error);
-    showToast("Import failed");
-    return;
-  }
+    const { data: inserted, error } =
+        await supabaseClient
+            .from("orders")
+            .insert(dbRows)
+            .select();
 
-  // restore ids back into JS objects
-  inserted.forEach((dbRow, index) => {
-    rows[index]._id = dbRow.id;
-  });
+    if(error){
+        console.error(error);
+        showToast("Import failed");
+        return;
+    }
 
-  // one import log per order (temporary)
-  for (const row of rows) {
-    await addBulkLogs(
-      rows.map((row) => ({
-        orderId: row._id,
-        action: "IMPORT"
-      }))
-    );
-  }
+    // restore ids back into JS objects
+    inserted.forEach((dbRow, index)=>{
+        rows[index]._id = dbRow.id;
+    });
 
-  await loadOrders();
-  showToast(`${rows.length} orders imported`);
+    // one import log per order (temporary)
+    for(const row of rows){
+
+        await addLog({
+            orderId: row._id,
+            action:"IMPORT"
+        });
+    }
+
+    await loadOrders();
+    showToast(`${rows.length} orders imported`);
 }
 
-async function addBulkLogs(logs) {
-  const { data: userData } = await supabaseClient.auth.getUser();
+async function addBulkLogs(logs){
+
+  const {data:userData} =
+    await supabaseClient.auth.getUser();
 
   const user = userData.user;
-  if (!user) return;
+  if(!user)
+      return;
 
-  const rows = logs.map((log) => ({
-    order_id: log.orderId,
-    user_id: user.id,
-    user_name: user.user_metadata.full_name || user.email,
-    user_email: user.email,
-    action: log.action
+  const rows = logs.map(log => ({
+      order_id: log.orderId,
+      user_id:user.id,
+      user_name:user.user_metadata.full_name || user.email,
+      user_email:user.email,
+      action:log.action
   }));
 
-  const { error } = await supabaseClient.from("order_logs").insert(rows);
+  const {error} =
+    await supabaseClient
+      .from("order_logs")
+      .insert(rows);
 
-  if (error) console.error(error);
+  if(error)
+      console.error(error);
 }
 
 // ======= Display Name =======
-function showProfile() {
+function showProfile(){  
   document.getElementById("profileModal").style.display = "block";
   loadProfile();
 }
 
-async function loadProfile() {
-  const { data, error } = await supabaseClient.auth.getUser();
-  if (error) {
+async function loadProfile(){
+  const { data, error } =
+    await supabaseClient.auth.getUser();
+  if(error){
     console.error(error);
     return;
   }
 
   const user = data.user;
-  document.getElementById("currentEmail").innerText = user.email;
+  document.getElementById("currentEmail").innerText =
+    user.email;
   document.getElementById("displayNameInput").value =
     user.user_metadata.full_name || "";
 }
 
-async function saveProfileName() {
-  const name = document.getElementById("displayNameInput").value.trim();
+async function saveProfileName(){
+  const name =
+    document.getElementById("displayNameInput").value.trim();
 
-  const { error } = await supabaseClient.auth.updateUser({
-    data: {
-      full_name: name
-    }
-  });
+  const { error } =
+    await supabaseClient.auth.updateUser({
+      data:{
+        full_name:name
+      }
+    });
 
-  if (error) {
+  if(error){
     console.error(error);
     showToast("Update failed");
     return;
@@ -1421,58 +1485,59 @@ async function saveProfileName() {
   showToast("Name updated");
 }
 
-function showDashboard() {
-  document.getElementById("dashboardPage").style.display = "block";
-  document.getElementById("ordersPage").style.display = "none";
+function showDashboard(){
+    document.getElementById("dashboardPage").style.display = "block";
+    document.getElementById("ordersPage").style.display = "none";
 
-  updateDashboard();
+    updateDashboard();
 }
 
-function showOrders() {
-  document.getElementById("dashboardPage").style.display = "none";
-  document.getElementById("ordersPage").style.display = "block";
+function showOrders(){
+    document.getElementById("dashboardPage").style.display = "none";
+    document.getElementById("ordersPage").style.display = "block";
 }
 
 function updateDashboard() {
-  const total = data.length;
+    const total = data.length;
 
-  let redline = 0;
-  let ecs = 0;
-  let tdot = 0;
-  let others = 0;
+    let redline = 0;
+    let ecs = 0;
+    let tdot = 0;
+    let others = 0;
 
-  data.forEach((row) => {
-    const dealer = (row["DShipper ID"] || "").trim().toUpperCase();
+    data.forEach(row => {
+        const dealer = (row["DShipper ID"] || "").trim().toUpperCase();
 
-    switch (dealer) {
-      case "W7232":
-        redline++;
-        break;
+        switch(dealer){
+            case "W7232":
+                redline++;
+                break;
 
-      case "W6938":
-        ecs++;
-        break;
+            case "W6938":
+                ecs++;
+                break;
 
-      case "W7290":
-        tdot++;
-        break;
+            case "W7290":
+                tdot++;
+                break;
 
-      default:
-        others++;
-    }
-  });
+            default:
+                others++;
+        }
+    });
 
-  document.getElementById("totalOrders").innerText = total;
-  document.getElementById("redlineOrders").innerText = redline;
-  document.getElementById("ecsOrders").innerText = ecs;
-  document.getElementById("tdotOrders").innerText = tdot;
-  document.getElementById("otherOrders").innerText = others;
+    document.getElementById("totalOrders").innerText = total;
+    document.getElementById("redlineOrders").innerText = redline;
+    document.getElementById("ecsOrders").innerText = ecs;
+    document.getElementById("tdotOrders").innerText = tdot;
+    document.getElementById("otherOrders").innerText = others;
 }
 
-function showReadme() {
-  const body = document.getElementById("readmeBody");
+function showReadme(){
 
-  body.innerHTML = `
+    const body = document.getElementById("readmeBody");
+
+    body.innerHTML = `
 <h3>Active Development</h3>
 <ul>
 <li>✅ CRUD Orders</li>
@@ -1502,11 +1567,12 @@ function showReadme() {
 </ul>
 
 `;
-  document.getElementById("readmeModal").style.display = "block";
+    document.getElementById("readmeModal").style.display = "block";
 }
 
-function startRealtime() {
-  if (realtimeChannel) {
+function startRealtime(){
+
+  if(realtimeChannel){
     return;
   }
 
@@ -1519,29 +1585,30 @@ function startRealtime() {
         schema: "public",
         table: "orders"
       },
-      async (payload) => {
-        console.log(
-          "Realtime:",
-          payload.eventType,
-          payload.new?.id ?? payload.old?.id
-        );
+      async (payload)=>{
+
+        console.log("Realtime event:", payload.new.id); 
 
         await loadOrders();
 
         showToast(
           payload.eventType === "INSERT"
-            ? "New order added"
-            : payload.eventType === "UPDATE"
-            ? "Order updated"
-            : "Order deleted"
+          ? "New order added"
+          :
+          payload.eventType === "UPDATE"
+          ? "Order updated"
+          :
+          "Order deleted"
         );
       }
     )
-    .subscribe((status) => {
+    .subscribe((status)=>{
       console.log("Realtime status:", status);
     });
 }
 
 function openDropShip() {
-  window.open("https://j1286.github.io/dshiper/", "_blank");
-}
+  window.open(
+    "https://j1286.github.io/dshiper/",
+    "_blank"
+  );
