@@ -138,7 +138,7 @@ async function loadOrders(){
 
 async function insertOrder(row) {
 
-  const dbRow = buildDBRow(row);
+  const dbRow = mapRowToDB(row);
 
   const { data: inserted, error } =
     await supabaseClient
@@ -196,7 +196,7 @@ async function addLog({
 }
 }
 
-function buildDBRow(row) {
+function mapRowToDB(row) {
   return {
     dshipper_id: row["DShipper ID"] || "",
     tr_orig_no: row["Tr.Orig.No."] || "",
@@ -245,50 +245,7 @@ function buildDBRow(row) {
 
 async function updateOrder(row){
 
-  const dbRow = {
-    dshipper_id: row["DShipper ID"] || "",
-    tr_orig_no: row["Tr.Orig.No."] || "",
-    cust_po_no: row["Cust. PO No."] || "",
-
-    item_id_1: row["Item ID 1"] || "",
-    qty_1: row["Qty 1"] || "",
-    price_1: row["Price 1"] || "",
-
-    item_id_2: row["Item ID 2"] || "",
-    qty_2: row["Qty 2"] || "",
-    price_2: row["Price 2"] || "",
-
-    item_id_3: row["Item ID 3"] || "",
-    qty_3: row["Qty 3"] || "",
-    price_3: row["Price 3"] || "",
-
-    item_id_4: row["Item ID 4"] || "",
-    qty_4: row["Qty 4"] || "",
-    price_4: row["Price 4"] || "",
-
-    item_id_5: row["Item ID 5"] || "",
-    qty_5: row["Qty 5"] || "",
-    price_5: row["Price 5"] || "",
-
-    ship_name: row["Ship Name"] || "",
-    ship_addr1: row["Ship Addr1"] || "",
-    ship_addr2: row["Ship Addr2"] || "",
-    ship_city: row["Ship City"] || "",
-    ship_state: row["Ship State"] || "",
-    ship_zip: row["Ship Zip"] || "",
-    ship_country: row["Ship Country"] || "",
-    ship_phone: row["Ship Phone"] || "",
-    ship_email: row["Ship Email"] || "",
-    ship_service: row["Ship Service"] || "",
-    ship_ins: row["Ship Ins."] || "",
-    ship_cod: row["Ship COD"] || "",
-    ship_confirm: row["Ship Confirm."] || "",
-    ship_from: row["Ship From"] || "",
-    ship_acct: row["Ship Acct"] || "",
-
-    notes: row._notes || "",
-    updated_at: new Date().toISOString()
-  };
+  const dbRow = mapRowToDB(row);
 
   const { error } =
     await supabaseClient
