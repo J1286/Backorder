@@ -939,13 +939,13 @@ async function deleteMarkedRows() {
     if (!confirm(`Delete ${marked.length} selected order(s)?`))
         return;
 
-    // Save ONE undo action
+    // Save one undo action
     addUndoAction({
         action: "BULK_DELETE",
         rows: marked.map(row => structuredClone(row))
     });
 
-    // Log every delete
+    // Create history logs
     for (const row of marked) {
 
         await addLog({
@@ -954,32 +954,21 @@ async function deleteMarkedRows() {
         });
     }
 
-    // Delete all from database
-    const ids = marked.map(r => r._id);
+    // Delete from database
+    const ids = marked.map(row => row._id);
 
-// Save one undo action
-addUndoAction({
-    action: "BULK_DELETE",
-    rows: marked.map(r => structuredClone(r))
-});
+    const success = await deleteOrdersFromDB(ids);
+      if(!success){
+        showToast("Delete failed");
+        return;
+      }
 
-// Log each delete
-for (const row of marked) {
-    await addLog({
-        orderId: row._id,
-        action: "DELETE"
-    });
-}
-
-// One database request
-await deleteOrdersFromDB(ids);
-await loadOrders();
-showToast(`${marked.length} orders deleted`);
+    // Refresh table
+    await loadOrders();
+    showToast(`${marked.length} orders deleted`);
 }
 
 async function deleteOrdersFromDB(ids){
-
-    console.log("deleteOrdersFromDB received:", ids);
 
     const { error } =
         await supabaseClient
@@ -987,11 +976,12 @@ async function deleteOrdersFromDB(ids){
             .delete()
             .in("id", ids);
 
-    console.log("Delete error:", error);
-
     if(error){
         console.error(error);
+        return false;
     }
+
+    return true;
 }
 
 function copyMarkedRows() {
