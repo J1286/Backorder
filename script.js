@@ -1303,10 +1303,22 @@ function exportCSV(marked = false) {
     return;
   }
 
-  const wsData = [
-    columns,
-    ...exportData.map((r) => columns.map((c) => r[c] || ""))
-  ];
+  const exportColumns = [
+    "Notes",
+    ...columns
+];
+
+const wsData = [
+    exportColumns,
+    ...exportData.map(r =>
+        exportColumns.map(c =>
+            c === "Notes"
+            ? r._notes || ""
+            : r[c] || ""
+        )
+    )
+];
+  
   const ws = XLSX.utils.aoa_to_sheet(wsData);
   ws["!views"] = [{ state: "frozen", ySplit: 1 }];
   ws["!cols"] = columns.map((col) => {
@@ -1359,10 +1371,13 @@ async function processExcel(file){
 
       headers.forEach((header,index)=>{
         if(columns.includes(header)){
-          newRow[header] =
-            row[index] ?? "";
+          newRow[header] = row[index] ?? "";
+    }
+
+        if(header === "Notes"){
+          newRow._notes = row[index] ?? "";
         }
-      });
+    });
       return newRow;
     });
 
