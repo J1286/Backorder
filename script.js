@@ -1370,25 +1370,67 @@ async function processExcel(file){
 }
 
 async function insertImportedOrders(rows){
-  
-  let count = 0;
-  for(const row of rows){
-    const inserted =
-      await insertOrder(row);
 
-    if(inserted){
-      count++;
-      await addLog({
-        orderId: inserted.id,
+  const dbRows = rows.map(row => mapRowToDB(row));
+
+  const { data: inserted, error } =
+    await supabaseClient
+      .from("orders")
+      .insert(dbRows)
+      .select();
+
+  if(error){
+    console.error("Bulk import failed:", error);
+    showToast("Import failed");
+    return;
+  }
+
+  // create logs
+  const logs = inserted.map(row => ({
+    order_id: row.id,
+    action: "CREATE"
+  }));
+
+  for(const log of logs){
+    await addBulkLogs(
+      inserted.map(row => ({
+        orderId:row.id,
         action:"CREATE"
-      });
-    }
+      }))
+    );
   }
 
   await loadOrders();
+
   showToast(
-    `${count} orders imported`
+    `${inserted.length} orders imported`
   );
+}
+
+async function addBulkLogs(logs){
+
+  const {data:userData} =
+    await supabaseClient.auth.getUser();
+
+  const user = userData.user;
+  if(!user)
+      return;
+
+  const rows = logs.map(log => ({
+      order_id: log.orderId,
+      user_id:user.id,
+      user_name:user.user_metadata.full_name || user.email,
+      user_email:user.email,
+      action:log.action
+  }));
+
+  const {error} =
+    await supabaseClient
+      .from("order_logs")
+      .insert(rows);
+
+  if(error)
+      console.error(error);
 }
 
 // ======= Display Name =======
