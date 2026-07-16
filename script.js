@@ -1392,12 +1392,11 @@ async function insertImportedOrders(rows){
   }));
 
   for(const log of logs){
-    await addBulkLogs(
-      inserted.map(row => ({
-        orderId:row.id,
-        action:"CREATE"
-      }))
-    );
+    await addLog({
+      orderId: inserted[0].id,
+      action: "IMPORT",
+      newValue: `${inserted.length} orders imported`
+    });
   }
 
   await loadOrders();
