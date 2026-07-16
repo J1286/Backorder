@@ -770,7 +770,7 @@ async function showHistory(orderId){
   const { data: logs, error } = await supabaseClient
     .from("order_logs")
     .select("*")
-    .eq("batch_id", batch_id)
+    .eq("order_Id", orderId)
     .order("created_at", { ascending:false });
 
   if(error){
@@ -1384,13 +1384,9 @@ async function insertImportedOrders(rows){
   }
 
   // create logs
-  const batchId = crypto.randomUUID();
   const logs = inserted.map(row => ({
     order_id: row.id,
-    action:"IMPORT",
-    batch_id: batchId,
-    new_value:`Imported batch ${batchId}`
-}));
+  })); 
 
   for(const log of logs){
     await addLog({
