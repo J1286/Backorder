@@ -757,10 +757,8 @@ safeRemove(select);
     const timeTd = document.createElement("td");
     timeTd.innerText = formatTime(row._meta?.updatedAt);
     tr.appendChild(timeTd);
-
     fragment.appendChild(tr);
-  });
-
+  );
   tbody.appendChild(fragment);
 }
 
