@@ -582,9 +582,11 @@ tr.appendChild(actionTd);
 
     // save on blur
     textSpan.addEventListener("blur", async () => {
-
+      if (textSpan.dataset.dropdownOpen === "1") {
+        delete textSpan.dataset.dropdownOpen;
+        return;
+    }
   if (textSpan.dataset.before !== textSpan.innerText) {
-
     const oldValue = textSpan.dataset.before;
     const newValue = textSpan.innerText;
 
@@ -626,6 +628,7 @@ tr.appendChild(actionTd);
     notesTd.appendChild(dropdownBtn);
 
     dropdownBtn.addEventListener("click", (e) => {
+      e.preventDefault();
       e.stopPropagation(); // prevent focus issues
 
       const select = document.createElement("select");
@@ -668,6 +671,7 @@ tr.appendChild(actionTd);
       });
 
 row._notes = newValue;
+textSpan.innerText = newValue;
 
 row._meta = row._meta || {};
 row._meta.updatedAt = new Date().toISOString();
@@ -1407,11 +1411,12 @@ async function insertImportedOrders(rows){
 
     // one import log per order (temporary)
     for(const row of rows){
-
-        await addLog({
-            orderId: row._id,
-            action:"IMPORT"
-        });
+        await addBulkLogs(
+          rows.map(row => ({
+          orderId: row._id,
+          action: "IMPORT"
+        }))
+      );
     }
 
     await loadOrders();
@@ -1587,7 +1592,11 @@ function startRealtime(){
       },
       async (payload)=>{
 
-        console.log("Realtime event:", payload.new.id); 
+        console.log(
+          "Realtime:",
+            payload.eventType,
+            payload.new?.id ?? payload.old?.id
+        ); 
 
         await loadOrders();
 
