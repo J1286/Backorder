@@ -467,8 +467,10 @@ function renderTable() {
       const matchSearch =
         !searchQuery ||
         columns.some((col) =>
-          (row[col] || "").toLowerCase().includes(searchQuery)
-        );
+          String(row[col] || "")
+      .toLowerCase()
+      .includes(searchQuery)
+    );
 
       const id = (row["DShipper ID"] || "").trim().toUpperCase();
 
