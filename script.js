@@ -1508,6 +1508,7 @@ function showReadme(){
 <li>⬜ Dashboard updates</li>
 <li>⬜ Select All</li>
 <li>⬜ Readme in a separate HTML or markdown file</li>
+<li>⬜ Separate loading from rendering</li>
 </ul>
 
 `;
