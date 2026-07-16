@@ -550,7 +550,6 @@ historyBtn.addEventListener("click", () => {
 
 actionBox.appendChild(historyBtn);
 
-
 const deleteBtn = document.createElement("button");
 deleteBtn.className = "delete-btn";
 deleteBtn.textContent = "🗑️";
@@ -741,7 +740,6 @@ safeRemove(select);
       data[rowIndex]._meta = data[rowIndex]._meta || {};
       data[rowIndex]._meta.updatedAt = new Date().toISOString();
 
-
       await addLog({
         orderId: data[rowIndex]._id,
         action: "UPDATE",
@@ -772,7 +770,7 @@ async function showHistory(orderId){
   const { data: logs, error } = await supabaseClient
     .from("order_logs")
     .select("*")
-    .eq("order_id", orderId)
+    .eq("batch_id", batch_id)
     .order("created_at", { ascending:false });
 
   if(error){
@@ -1386,10 +1384,13 @@ async function insertImportedOrders(rows){
   }
 
   // create logs
+  const batchId = crypto.randomUUID();
   const logs = inserted.map(row => ({
     order_id: row.id,
-    action: "CREATE"
-  }));
+    action:"IMPORT",
+    batch_id: batchId,
+    new_value:`Imported batch ${batchId}`
+}));
 
   for(const log of logs){
     await addLog({
