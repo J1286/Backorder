@@ -229,17 +229,21 @@ function mapRowToDB(row) {
   };
 }
 
-async function updateOrder(row) {
-  const dbRow = mapRowToDB(row);
+async function updateOrder(row, updateTimestamp = true) {
+    const dbRow = mapRowToDB(row);
 
-  const { error } = await supabaseClient
-    .from("orders")
-    .update(dbRow)
-    .eq("id", row._id);
+    if (!updateTimestamp) {
+        delete dbRow.updated_at;
+    }
 
-  if (error) {
-    console.error("Update failed:", error);
-  }
+    const { error } = await supabaseClient
+        .from("orders")
+        .update(dbRow)
+        .eq("id", row._id);
+
+    if (error) {
+        console.error("Update failed:", error);
+    }
 }
 
 async function deleteOrderFromDB(id) {
@@ -597,9 +601,6 @@ function renderTable() {
         const cls = getNoteClass(newValue);
         notesTd.className = cls ? `notes ${cls}` : "notes";
 
-        row._meta = row._meta || {};
-        row._meta.updatedAt = new Date().toISOString();
-
         await addLog({
           orderId: row._id,
           action: "UPDATE",
@@ -608,7 +609,7 @@ function renderTable() {
           newValue
         });
 
-        await updateOrder(row);
+        await updateOrder(row, false);
       }
     });
 
@@ -667,9 +668,6 @@ function renderTable() {
 
         row._notes = newValue;
         textSpan.innerText = newValue;
-
-        row._meta = row._meta || {};
-        row._meta.updatedAt = new Date().toISOString();
 
         const cls = getNoteClass(newValue);
         notesTd.className = cls ? `notes ${cls}` : "notes";
