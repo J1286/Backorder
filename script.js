@@ -182,7 +182,7 @@ async function addLog({
   }
 }
 
-function mapRowToDB(row) {
+function mapRowToDB(row, updateTimestamp = true) {
   return {
     dshipper_id: row["DShipper ID"] || "",
     tr_orig_no: row["Tr.Orig.No."] || "",
@@ -225,25 +225,26 @@ function mapRowToDB(row) {
     ship_acct: row["Ship Acct"] || "",
 
     notes: row._notes || "",
-    updated_at: new Date().toISOString()
+
+    ...(updateTimestamp && {
+      updated_at: new Date().toISOString()
+    })
   };
 }
 
 async function updateOrder(row, updateTimestamp = true) {
-    const dbRow = mapRowToDB(row);
 
-    if (!updateTimestamp) {
-        delete dbRow.updated_at;
-    }
+  const dbRow = mapRowToDB(row, updateTimestamp);
 
-    const { error } = await supabaseClient
-        .from("orders")
-        .update(dbRow)
-        .eq("id", row._id);
+  const { error } =
+    await supabaseClient
+      .from("orders")
+      .update(dbRow)
+      .eq("id", row._id);
 
-    if (error) {
-        console.error("Update failed:", error);
-    }
+  if (error) {
+    console.error("Update failed:", error);
+  }
 }
 
 async function deleteOrderFromDB(id) {
@@ -680,7 +681,7 @@ function renderTable() {
           newValue
         });
 
-        await updateOrder(row);
+        await updateOrder(row, false);
 
         safeRemove(select);
       });
@@ -743,7 +744,7 @@ function renderTable() {
               oldValue,
               newValue
             });
-            await updateOrder(data[rowIndex]);
+            await updateOrder(row);
           }
         }
       });
