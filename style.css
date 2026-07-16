@@ -157,20 +157,20 @@ td:empty {
 }
 
 /* ===== Notes Colors ===== */
-.note-instock {
-  background: #fff3a6 !important; /* yellow */
+#backorderTable td:nth-child(3).note-instock {
+    background: #fff3a6;
 }
 
-.note-hold {
-  background: #ffe0b2 !important; /* light orange */
+#backorderTable td:nth-child(3).note-hold {
+    background: #ffe0b2;
 }
 
-.note-wait {
-  background: #d7c7ff !important; /* purple */
+#backorderTable td:nth-child(3).note-wait {
+    background: #d7c7ff;
 }
 
-.note-discontinued {
-  background: #ffcdd2 !important; /* light red */
+#backorderTable td:nth-child(3).note-discontinued {
+    background: #ffcdd2;
 }
 
 /* ===== Small UI polish ===== */
