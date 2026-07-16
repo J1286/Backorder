@@ -638,7 +638,9 @@ tr.appendChild(actionTd);
     });
 
     row._notes = newValue;
-
+    const cls = getNoteClass(newValue);
+    notesTd.className = cls ? `notes ${cls}` : "notes";
+    
     row._meta = row._meta || {};
     row._meta.updatedAt = new Date().toISOString();
 
