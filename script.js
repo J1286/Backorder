@@ -519,7 +519,6 @@ function renderTable() {
 const actionBox = document.createElement("div");
 actionBox.className = "action-box";
 
-
 const checkbox = document.createElement("input");
 checkbox.type = "checkbox";
 checkbox.checked = !!row._marked;
@@ -550,7 +549,6 @@ historyBtn.addEventListener("click", () => {
 
 actionBox.appendChild(historyBtn);
 
-
 const deleteBtn = document.createElement("button");
 deleteBtn.className = "delete-btn";
 deleteBtn.textContent = "🗑️";
@@ -559,7 +557,6 @@ deleteBtn.title = "Delete";
 deleteBtn.addEventListener("click", () => deleteRow(row._id));
 
 actionBox.appendChild(deleteBtn);
-
 
 actionTd.appendChild(actionBox);
 
@@ -765,7 +762,7 @@ safeRemove(select);
   });
 
   tbody.appendChild(fragment);
-} 
+}
 
 async function showHistory(orderId){
 
