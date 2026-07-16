@@ -275,9 +275,8 @@ let searchQuery = "";
 let undoStack = [];
 let redoStack = [];
 let notesSortAsc = true;
-let sortByUpdated = false;
-let sortAsc = false;
 let realtimeChannel = null; 
+let sortMode = "default";
 
 // Columns definition
 const columns = [
@@ -434,10 +433,23 @@ function renderHeaders() {
     columns.map((col) => `<th>${col}</th>`).join("") +
     `<th id="updatedHeader" style="cursor:pointer;">Updated</th>`;
   document.getElementById("updatedHeader").addEventListener("click", () => {
-    sortByUpdated = true;
-    sortAsc = !sortAsc; // toggle asc/desc
-    loadOrders();
-  });
+    
+    switch (sortMode) {
+        case "default":
+            sortMode = "updated-desc";
+            break;
+
+        case "updated-desc":
+            sortMode = "updated-asc";
+            break;
+
+        default:
+            sortMode = "default";
+            break;
+    }
+
+    renderTable();
+});
 }
 
 function formatTime(iso) {
@@ -487,14 +499,30 @@ function renderTable() {
       return matchSearch && matchDealer;
     });
 
-  if (sortByUpdated) {
-    filteredData.sort((a, b) => {
-      const timeA = new Date(a.row._meta?.updatedAt || 0).getTime();
-      const timeB = new Date(b.row._meta?.updatedAt || 0).getTime();
+  switch (sortMode) {
 
-      return sortAsc ? timeA - timeB : timeB - timeA;
-    });
-  }
+    case "updated-desc":
+        filteredData.sort((a, b) => {
+            const timeA = new Date(a.row._meta?.updatedAt || 0).getTime();
+            const timeB = new Date(b.row._meta?.updatedAt || 0).getTime();
+            return timeB - timeA;
+        });
+        break;
+
+    case "updated-asc":
+        filteredData.sort((a, b) => {
+            const timeA = new Date(a.row._meta?.updatedAt || 0).getTime();
+            const timeB = new Date(b.row._meta?.updatedAt || 0).getTime();
+            return timeA - timeB;
+        });
+        break;
+
+    default:
+        // Keep the original order (created_at)
+        break;
+}
+
+filteredData.forEach(({ row, index }, rowIndex) => {
 
   filteredData.forEach(({ row, index }, rowIndex) => {
     const tr = document.createElement("tr");
